@@ -49,6 +49,8 @@ function afficherPreselection() {
       "preselection-candidats"
     );
 
+
+
   container.innerHTML = "";
 
   candidats.forEach(candidat => {
@@ -95,7 +97,7 @@ function afficherPreselection() {
         ) {
 
           alert(
-            "Maximum 6 candidats"
+            "Enlevez un candidat avant d'en ajouter un autre"
           );
 
           return;
@@ -490,5 +492,34 @@ if (
 }
 
 }
+const boutonPrequalification =
+  document.getElementById(
+    "toggle-prequalification"
+  );
 
+let dejaClique = false;
+
+boutonPrequalification
+  .addEventListener(
+    "click",
+    () => {
+
+      document
+        .getElementById(
+          "preselection-candidats"
+        )
+        .scrollIntoView({
+          behavior: "smooth"
+        });
+
+      if (!dejaClique) {
+
+        boutonPrequalification
+          .innerText =
+            "✓ Préqualification modifiable ci-dessous";
+
+        dejaClique = true;
+      }
+    }
+  );
 mettreAJour();

@@ -22,7 +22,7 @@ const candidats = [
 
   { id: 11, nom: "Florian Philippot" },
 
-  { id: 12, nom: "François Bayrou" },
+  { id: 12, nom: "François Baroin" },
 
   { id: 13, nom: "François Hollande" },
 
