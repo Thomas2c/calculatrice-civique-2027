@@ -11,6 +11,258 @@ const acceptables = [];
 
 const pronostics = {};
 
+const coalitions = {};
+
+const coalitionsOuvertes = {};
+
+let presidentActif = null;
+
+const presidentsEvalues = [];
+
+function afficherCoalitions() {
+
+  const container =
+    document.getElementById(
+      "coalitions"
+    );
+
+  container.innerHTML = "";
+
+  container.style.display =
+    "flex";
+
+  container.style.gap =
+    "20px";
+
+  // -------------------
+  // COLONNE GAUCHE
+  // -------------------
+
+  const colonnePresidents =
+    document.createElement("div");
+
+  colonnePresidents.style.flex =
+    "1";
+
+  // -------------------
+  // COLONNE DROITE
+  // -------------------
+
+  const colonneMinistres =
+    document.createElement("div");
+
+  colonneMinistres.style.flex =
+    "2";
+
+  const candidatsVisibles =
+    candidats.filter(c =>
+      preselection.includes(c.id)
+    );
+
+  // -------------------
+  // LISTE PRESIDENTS
+  // -------------------
+
+  candidatsVisibles.forEach(
+    president => {
+
+      const bouton =
+        document.createElement("button");
+
+if (
+  presidentsEvalues.includes(
+    president.id
+  )
+) {
+
+  bouton.innerText =
+    "✓ " + president.nom;
+
+  bouton.style.fontWeight =
+    "bold";
+
+} else {
+
+  bouton.innerText =
+    president.nom;
+
+}
+
+      bouton.style.display =
+        "block";
+
+      bouton.style.marginBottom =
+        "10px";
+
+      if (
+        presidentActif ===
+        president.id
+      ) {
+
+        bouton.style.backgroundColor =
+          "#4da3ff";
+
+        bouton.style.color =
+          "white";
+
+      }
+
+      bouton.onclick = () => {
+
+        if (
+          presidentActif ===
+          president.id
+        ) {
+
+          presidentActif = null;
+
+        } else {
+
+          presidentActif =
+            president.id;
+
+        }
+
+        mettreAJour();
+
+      };
+
+      colonnePresidents.appendChild(
+        bouton
+      );
+
+    }
+  );
+
+  // -------------------
+  // LISTE MINISTRES
+  // -------------------
+
+  if (presidentActif !== null) {
+
+    const president =
+      candidats.find(
+        c => c.id === presidentActif
+      );
+
+    const titre =
+      document.createElement("div");
+
+    titre.innerHTML =
+      "<strong>"
+      + president.nom
+      + " pourrait gouverner avec :</strong>";
+
+    titre.style.marginBottom =
+      "15px";
+
+    colonneMinistres.appendChild(
+      titre
+    );
+
+    // -------- BOUTON FERMER --------
+
+    const boutonFermer =
+      document.createElement("button");
+
+    boutonFermer.innerText =
+      "Fermer";
+
+    boutonFermer.style.display =
+      "block";
+
+    boutonFermer.style.marginBottom =
+      "20px";
+
+   boutonFermer.onclick = () => {
+
+  if (
+    !presidentsEvalues.includes(
+      president.id
+    )
+  ) {
+
+    presidentsEvalues.push(
+      president.id
+    );
+
+  }
+
+  presidentActif = null;
+
+  mettreAJour();
+
+};
+
+      
+
+    colonneMinistres.appendChild(
+      boutonFermer
+    );
+
+    // -------- MINISTRES --------
+
+    candidats.forEach(
+      ministre => {
+
+        if (
+          ministre.id === president.id
+        ) {
+          return;
+        }
+
+        const bouton =
+          document.createElement("button");
+
+        bouton.innerText =
+          ministre.nom;
+
+        const cle =
+          president.id
+          + "-"
+          + ministre.id;
+
+        if (
+          coalitions[cle]
+        ) {
+
+          bouton.style.backgroundColor =
+            "lightblue";
+
+        }
+
+        bouton.onclick = () => {
+
+          coalitions[cle] =
+            !coalitions[cle];
+
+          mettreAJour();
+
+        };
+
+        colonneMinistres.appendChild(
+          bouton
+        );
+
+      }
+    );
+
+  }
+
+  container.appendChild(
+    colonnePresidents
+  );
+
+  container.appendChild(
+    colonneMinistres
+  );
+
+}
+
+const zoneMinistres =
+  document.createElement("div");
+
+
 function toggleSelection(
   tableau,
   id,
@@ -274,26 +526,16 @@ if (acceptable.id === refuse.id) {
           const duel =
             document.createElement("div");
 
-          duel.style.marginBottom =
-            "20px";
+duel.style.padding =
+  "8px";
 
-          duel.style.padding =
-            "10px";
+duel.style.border =
+  "2px solid #444";
 
-          duel.style.border =
-            "1px solid #ddd";
+duel.style.borderRadius =
+  "8px";
 
-          const titre =
-            document.createElement("div");
 
-          titre.innerHTML =
-            "<strong>"
-            + acceptable.nom
-            + " vs "
-            + refuse.nom
-            + "</strong>";
-
-          duel.appendChild(titre);
 
           const boutonAcceptable =
             document.createElement("button");
@@ -376,76 +618,210 @@ function calculerStrategie() {
       "strategie"
     );
 
-  const scores = {};
+  let html = "";
 
-  candidats.forEach(candidat => {
+  const candidatsVisibles =
+    candidats.filter(c =>
+      preselection.includes(c.id)
+    );
 
-    scores[candidat.id] = 0;
+  const scoresVictoire = {};
+
+  const scoresCoalition = {};
+
+  // -------------------
+  // SCORE VICTOIRE
+  // -------------------
+
+  candidatsVisibles.forEach(c => {
+
+    scoresVictoire[c.id] = 0;
 
   });
 
   Object.values(pronostics)
     .forEach(vainqueurId => {
 
-      scores[vainqueurId]++;
+      if (
+        scoresVictoire[vainqueurId]
+        !== undefined
+      ) {
+
+        scoresVictoire[
+          vainqueurId
+        ]++;
+
+      }
 
     });
 
-  let meilleur = null;
+  // -------------------
+  // SCORE COALITION
+  // -------------------
 
-  let meilleurScore = -1;
+  candidatsVisibles.forEach(
+    president => {
 
-  acceptables.forEach(id => {
+      let score = 0;
 
-    if (
-      scores[id] > meilleurScore
-    ) {
+      candidats.forEach(
+        ministre => {
 
-      meilleurScore =
-        scores[id];
+          const cle =
+            president.id
+            + "-"
+            + ministre.id;
 
-      meilleur =
-        candidats.find(
-          c => c.id === id
-        );
+          if (
+            coalitions[cle]
+          ) {
+
+            score++;
+
+          }
+
+        }
+      );
+
+      scoresCoalition[
+        president.id
+      ] = score;
 
     }
+  );
 
-  });
+  // -------------------
+  // RESULTATS
+  // -------------------
 
-  if (
-    meilleurScore <= 0
-  ) {
+  const resultats =
+    candidatsVisibles.map(
+      candidat => {
 
-    strategie.innerHTML =
-      "⚠ Aucun scénario satisfaisant";
+        const victoire =
+          scoresVictoire[
+            candidat.id
+          ];
 
-  } else {
+        const coalition =
+          scoresCoalition[
+            candidat.id
+          ];
 
-    strategie.innerHTML =
-      `
-      <div>
-        MON VOTE STRATÉGIQUE ACTUEL
-      </div>
+        const global =
+          victoire * coalition;
 
-      <br>
+        return {
+          candidat,
+          victoire,
+          coalition,
+          global
+        };
 
-      <div style="
-        font-size:32px;
-        font-weight:bold;
-      ">
-        → ${meilleur.nom}
-      </div>
+      }
+    );
 
-      <br>
+  // -------------------
+  // TRI
+  // -------------------
 
-      <div>
-        Victoires en duel :
-        ${meilleurScore}
-      </div>
+  resultats.sort(
+    (a, b) =>
+      b.global - a.global
+  );
+
+  // -------------------
+  // AFFICHAGE
+  // -------------------
+
+  html += `
+    <table style="
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    ">
+  `;
+
+  html += `
+    <tr>
+      <th align="left">
+        Candidat
+      </th>
+
+      <th>
+        Duels <br> gagnés
+      </th>
+
+      <th>
+        Alliances <br> pour gouverner
+      </th>
+
+      <th>
+        Note <br> Global
+      </th>
+    </tr>
+  `;
+
+  resultats.forEach(
+    resultat => {
+
+      let couleur = "";
+
+      if (
+        refus.includes(
+          resultat.candidat.id
+        )
+      ) {
+
+        couleur =
+          "#ffb3b3";
+
+      }
+
+      else if (
+        acceptables.includes(
+          resultat.candidat.id
+        )
+      ) {
+
+        couleur =
+          "#b7f0b7";
+
+      }
+
+      html += `
+        <tr style="
+          background:${couleur};
+        ">
+
+          <td>
+            ${resultat.candidat.nom}
+          </td>
+
+          <td align="center">
+            ${resultat.victoire}
+          </td>
+
+          <td align="center">
+            ${resultat.coalition}
+          </td>
+
+          <td align="center">
+            <strong>
+              ${resultat.global}
+            </strong>
+          </td>
+
+        </tr>
       `;
 
-  }
+    }
+  );
+
+  html += `</table>`;
+
+  strategie.innerHTML =
+    html;
 
 }
 
@@ -460,6 +836,8 @@ if (
   creerBoutons();
 
   afficherDuels();
+
+  afficherCoalitions();
 
   calculerStrategie();
 
