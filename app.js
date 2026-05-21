@@ -13,6 +13,8 @@ const pronostics = {};
 
 const coalitions = {};
 
+const optionsInstitutionnelles = {};
+
 const coalitionsOuvertes = {};
 
 let presidentActif = null;
@@ -123,6 +125,8 @@ if (
 
         }
 
+
+
         mettreAJour();
 
       };
@@ -200,8 +204,121 @@ if (
       boutonFermer
     );
 
-    // -------- MINISTRES --------
+const titreOptions =
+  document.createElement("div");
 
+titreOptions.innerHTML =
+  "<strong>Options institutionnelles possibles :</strong>";
+
+titreOptions.style.marginTop =
+  "10px";
+
+titreOptions.style.marginBottom =
+  "15px";
+
+colonneMinistres.appendChild(
+  titreOptions
+);
+    
+    const options = [
+
+  {
+    cle: "sansDissolution",
+    texte:
+      "Gouverner avec l’Assemblée actuelle sans dissolution"
+  },
+
+  {
+    cle: "coalitionDissolution",
+    texte:
+      "Former une coalition après dissolution"
+  },
+
+  {
+    cle: "majoriteAbsolue",
+    texte:
+      "Obtenir une majorité absolue après dissolution"
+  }
+
+];
+
+options.forEach(option => {
+
+  const ligne =
+    document.createElement("div");
+
+  ligne.style.marginBottom =
+    "10px";
+
+  const checkbox =
+    document.createElement("input");
+
+  checkbox.type =
+    "checkbox";
+
+  const cle =
+    president.id
+    + "-"
+    + option.cle;
+
+  checkbox.checked =
+    optionsInstitutionnelles[
+      cle
+    ] || false;
+
+  checkbox.onchange = () => {
+
+    optionsInstitutionnelles[
+      cle
+    ] = checkbox.checked;
+
+    mettreAJour();
+
+  };
+
+  const label =
+    document.createElement("span");
+
+  label.innerText =
+    " " + option.texte;
+
+  ligne.appendChild(
+    checkbox
+  );
+
+  ligne.appendChild(
+    label
+  );
+
+  colonneMinistres.appendChild(
+    ligne
+  );
+
+});
+
+    // -------- MINISTRES --------
+const separation =
+  document.createElement("hr");
+
+separation.style.margin =
+  "25px 0";
+
+colonneMinistres.appendChild(
+  separation
+);
+
+const titreMinistres =
+  document.createElement("div");
+
+titreMinistres.innerHTML =
+  "<strong>Personnalités compatibles pour gouverner :</strong><br><span style='font-size:14px;'>Choisissez les personnalités que ce candidat pourrait intégrer à son gouvernement.</span>";
+
+titreMinistres.style.marginBottom =
+  "15px";
+
+colonneMinistres.appendChild(
+  titreMinistres
+);
     candidats.forEach(
       ministre => {
 
@@ -611,6 +728,202 @@ duel.style.borderRadius =
 
 }
 
+function afficherScenariosPolitiques() {
+
+  const container =
+    document.getElementById(
+      "scenarios-politiques"
+    );
+
+  let html = "";
+
+  if (
+  Object.keys(pronostics).length === 0
+) {
+
+  container.innerHTML =
+    `
+    <h3>
+      Scénarios politiques
+    </h3>
+
+    <p>
+      Remplissez d’abord quelques duels
+      pour faire apparaître des scénarios
+      institutionnels possibles.
+    </p>
+    `;
+
+  return;
+
+}
+
+  const candidatsVisibles =
+    candidats.filter(c =>
+      preselection.includes(c.id)
+    );
+
+  html += `
+    <h3>
+      Scénarios politiques
+    </h3>
+
+    <table style="
+      width:100%;
+      border-collapse:collapse;
+      margin-top:15px;
+    ">
+  `;
+
+  html += `
+    <tr>
+
+      <th align="left">
+        Si ce candidat gagne...
+      </th>
+
+      <th align="left">
+        Alors le pouvoir exécutif pourrait être exercé par...
+      </th>
+
+      <th align="left">
+        Gouvernement probablement défini par ...
+      </th>
+
+    </tr>
+  `;
+
+  candidatsVisibles.forEach(
+    candidat => {
+
+      // -------------------
+      // OPTIONS
+      // -------------------
+
+      const sansDissolution =
+        optionsInstitutionnelles[
+          candidat.id
+          + "-sansDissolution"
+        ];
+
+      const coalition =
+        optionsInstitutionnelles[
+          candidat.id
+          + "-coalitionDissolution"
+        ];
+
+      const majorite =
+        optionsInstitutionnelles[
+          candidat.id
+          + "-majoriteAbsolue"
+        ];
+
+      // -------------------
+      // SCORE COALITION
+      // -------------------
+
+      let meilleurCoalitionnaire =
+        candidat.nom;
+
+      let meilleurScore = -1;
+
+      candidatsVisibles.forEach(
+        autre => {
+
+          let score = 0;
+
+          candidats.forEach(
+            ministre => {
+
+              const cle =
+                autre.id
+                + "-"
+                + ministre.id;
+
+              if (
+                coalitions[cle]
+              ) {
+
+                score++;
+
+              }
+
+            }
+          );
+
+          if (
+            score > meilleurScore
+          ) {
+
+            meilleurScore =
+              score;
+
+            meilleurCoalitionnaire =
+              autre.nom;
+
+          }
+
+        }
+      );
+
+      // -------------------
+      // INTERPRETATION
+      // -------------------
+
+      let executif = "";
+
+      if (majorite) {
+
+        executif =
+          candidat.nom;
+
+      }
+
+      else if (
+        sansDissolution
+        || coalition
+      ) {
+
+        executif =
+          "Coalition autour du président élu";
+
+      }
+
+      else {
+
+        executif =
+          "Cohabitation probable";
+
+      }
+
+      html += `
+        <tr>
+
+          <td>
+            ${candidat.nom}
+          </td>
+
+          <td>
+            ${executif}
+          </td>
+
+          <td>
+            ${meilleurCoalitionnaire}
+          </td>
+
+        </tr>
+      `;
+
+    }
+  );
+
+  html += `</table>`;
+
+  container.innerHTML =
+    html;
+
+}
+
 function calculerStrategie() {
 
   const strategie =
@@ -840,6 +1153,8 @@ if (
   afficherCoalitions();
 
   calculerStrategie();
+
+  afficherScenariosPolitiques();
 
 } else {
 

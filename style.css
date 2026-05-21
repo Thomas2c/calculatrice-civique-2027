@@ -281,3 +281,19 @@ button:hover {
   }
 
 }
+
+.explication-scenarios {
+
+  margin-top: 30px;
+
+  padding: 20px;
+
+  background: #f4f4f4;
+
+  border-radius: 10px;
+
+  font-size: 15px;
+
+  line-height: 1.5;
+
+}
