@@ -900,6 +900,8 @@ function afficherScenariosPolitiques() {
       preselection.includes(c.id)
     );
 
+
+
   html += `
     <h3>
       Scénarios politiques
@@ -959,49 +961,77 @@ function afficherScenariosPolitiques() {
       // SCORE COALITION
       // -------------------
 
-      let meilleurCoalitionnaire =
-        candidat.nom;
+     let meilleurScore = -1;
 
-      let meilleurScore = -1;
+let meilleurs = [];
 
-      candidatsVisibles.forEach(
-        autre => {
+candidatsVisibles.forEach(
+  autre => {
 
-          let score = 0;
+    let score = 0;
 
-          candidats.forEach(
-            ministre => {
+    candidats.forEach(
+      ministre => {
 
-              const cle =
-                autre.id
-                + "-"
-                + ministre.id;
+        const cle =
+          autre.id
+          + "-"
+          + ministre.id;
 
-              if (
-                coalitions[cle]
-              ) {
+        if (
+          coalitions[cle]
+        ) {
 
-                score++;
-
-              }
-
-            }
-          );
-
-          if (
-            score > meilleurScore
-          ) {
-
-            meilleurScore =
-              score;
-
-            meilleurCoalitionnaire =
-              autre.nom;
-
-          }
+          score++;
 
         }
+
+      }
+    );
+
+    // bonus :
+    // le président élu
+    // garde une prime
+    // de centralité
+
+    if (
+      autre.id === candidat.id
+    ) {
+
+      score += 0.5;
+
+    }
+
+    if (
+      score > meilleurScore
+    ) {
+
+      meilleurScore =
+        score;
+
+      meilleurs = [
+        autre.nom
+      ];
+
+    }
+
+    else if (
+      score === meilleurScore
+    ) {
+
+      meilleurs.push(
+        autre.nom
       );
+
+    }
+
+  }
+);
+
+const meilleurCoalitionnaire =
+  meilleurs.join(" / ");
+
+
 
       // -------------------
       // INTERPRETATION
@@ -1033,8 +1063,44 @@ function afficherScenariosPolitiques() {
 
       }
 
-      html += `
-        <tr>
+      const idsCoalition =
+  meilleurCoalitionnaire
+    .split(" / ")
+    .map(nom =>
+      candidats.find(
+        c => c.nom === nom
+      )?.id
+    );
+
+const tousAcceptables =
+  idsCoalition.every(id =>
+    acceptables.includes(id)
+  );
+
+const tousRefuses =
+  idsCoalition.every(id =>
+    refus.includes(id)
+  );
+
+let couleurCoalition = "";
+
+if (tousAcceptables) {
+
+  couleurCoalition =
+    "background:lightgreen;";
+
+}
+
+else if (tousRefuses) {
+
+  couleurCoalition =
+    "background:tomato;color:white;";
+
+}
+
+
+html += `
+  <tr>
 
 <td
   style="
@@ -1050,34 +1116,16 @@ function afficherScenariosPolitiques() {
   ${candidat.nom}
 </td>
 
-          <td>
-            ${executif}
-          </td>
+<td>
+  ${executif}
+</td>
 
-<td
-  style="
-    ${
-      refus.includes(
-        candidats.find(
-          c => c.nom === meilleurCoalitionnaire
-        )?.id
-      )
-      ? "background:tomato;color:white;"
-      : acceptables.includes(
-          candidats.find(
-            c => c.nom === meilleurCoalitionnaire
-          )?.id
-        )
-      ? "background:lightgreen;"
-      : ""
-    }
-  "
->
+<td style="${couleurCoalition}">
   ${meilleurCoalitionnaire}
 </td>
 
-        </tr>
-      `;
+  </tr>
+`;
 
     }
   );
