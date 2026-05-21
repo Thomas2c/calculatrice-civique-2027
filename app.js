@@ -422,6 +422,28 @@ function afficherPreselection() {
 
   container.innerHTML = "";
 
+  if (
+  preselection.length !== 6
+) {
+
+  container.style.border =
+    "3px solid red";
+
+  container.style.padding =
+    "15px";
+
+  container.style.borderRadius =
+    "12px";
+
+}
+
+else {
+
+  container.style.border =
+    "3px solid green";
+
+}
+
   candidats.forEach(candidat => {
 
     const bouton =
@@ -485,11 +507,45 @@ function afficherPreselection() {
 
   });
 
+const compteur =
   document.getElementById(
     "compteur-preselection"
-  ).innerText =
-    preselection.length
-    + " / 6 sélectionnés";
+  );
+
+const manque =
+  6 - preselection.length;
+
+if (
+  manque > 0
+) {
+
+  compteur.innerHTML =
+    `
+    <span style="
+      color:red;
+      font-weight:bold;
+    ">
+      Il vous manque encore
+      ${manque}
+      candidat(s)
+      pour atteindre 6
+      et passer à l’étape suivante.
+    </span>
+    `;
+
+} else {
+
+  compteur.innerHTML =
+    `
+    <span style="
+      color:green;
+      font-weight:bold;
+    ">
+      ✓ 6 candidats sélectionnés.
+    </span>
+    `;
+
+}
 
 }
 
