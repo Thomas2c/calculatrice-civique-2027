@@ -211,3 +211,73 @@ button:hover {
   gap: 12px;
 
 }
+
+@media (max-width: 900px) {
+
+  .dashboard-haut,
+  .dashboard-bas {
+
+    display: flex;
+    gap: 12px;
+
+  }
+
+  .dashboard-haut {
+
+    flex-wrap: wrap;
+
+  }
+
+  .dashboard-haut .colonne {
+
+    flex: 1 1 30%;
+
+    min-width: 280px;
+
+  }
+
+  .dashboard-bas .colonne {
+
+    flex: 1;
+
+  }
+
+  button {
+
+    font-size: 18px;
+    padding: 14px;
+
+  }
+
+  h1 {
+
+    font-size: 34px;
+
+  }
+
+  h2 {
+
+    font-size: 30px;
+
+  }
+
+  p {
+
+    font-size: 18px;
+    line-height: 1.5;
+
+  }
+
+  #scenarios {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  table {
+
+    font-size: 18px;
+
+  }
+
+}
