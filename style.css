@@ -36,10 +36,28 @@ h1 {
 
   flex: 1;
 
-  min-height: 500px;
+  min-height: auto;
 
   box-shadow:
     0 2px 8px rgba(0,0,0,0.1);
+
+}
+
+/* ------------------- */
+/* HAUT PLUS COMPACT */
+/* ------------------- */
+
+.dashboard-haut .colonne {
+
+  padding-top: 10px;
+
+  padding-bottom: 10px;
+
+}
+
+.dashboard-haut p {
+
+  margin-bottom: 10px;
 
 }
 
@@ -307,6 +325,8 @@ button:hover {
   padding: 20px;
 
   margin-top: 20px;
+
+  margin-bottom: 10px;
 
   box-shadow:
     0 2px 10px rgba(0,0,0,0.08);
