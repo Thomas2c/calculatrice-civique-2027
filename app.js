@@ -700,9 +700,9 @@ function afficherDuels() {
 
           };
 
-          // -------------------
-          // COULEURS
-          // -------------------
+// -------------------
+// COULEURS
+// -------------------
 
 if (
   pronostics[cle]
@@ -716,6 +716,9 @@ if (
     bouton1.style.backgroundColor =
       "tomato";
 
+    bouton1.style.color =
+      "white";
+
   }
 
   else if (
@@ -724,6 +727,19 @@ if (
 
     bouton1.style.backgroundColor =
       "lightgreen";
+
+    bouton1.style.color =
+      "black";
+
+  }
+
+  else {
+
+    bouton1.style.backgroundColor =
+      "#999";
+
+    bouton1.style.color =
+      "white";
 
   }
 
@@ -741,6 +757,9 @@ if (
     bouton2.style.backgroundColor =
       "tomato";
 
+    bouton2.style.color =
+      "white";
+
   }
 
   else if (
@@ -749,6 +768,19 @@ if (
 
     bouton2.style.backgroundColor =
       "lightgreen";
+
+    bouton2.style.color =
+      "black";
+
+  }
+
+  else {
+
+    bouton2.style.backgroundColor =
+      "#999";
+
+    bouton2.style.color =
+      "white";
 
   }
 
@@ -948,17 +980,45 @@ function afficherScenariosPolitiques() {
       html += `
         <tr>
 
-          <td>
-            ${candidat.nom}
-          </td>
+<td
+  style="
+    ${
+      refus.includes(candidat.id)
+      ? "background:tomato;color:white;"
+      : acceptables.includes(candidat.id)
+      ? "background:lightgreen;"
+      : ""
+    }
+  "
+>
+  ${candidat.nom}
+</td>
 
           <td>
             ${executif}
           </td>
 
-          <td>
-            ${meilleurCoalitionnaire}
-          </td>
+<td
+  style="
+    ${
+      refus.includes(
+        candidats.find(
+          c => c.nom === meilleurCoalitionnaire
+        )?.id
+      )
+      ? "background:tomato;color:white;"
+      : acceptables.includes(
+          candidats.find(
+            c => c.nom === meilleurCoalitionnaire
+          )?.id
+        )
+      ? "background:lightgreen;"
+      : ""
+    }
+  "
+>
+  ${meilleurCoalitionnaire}
+</td>
 
         </tr>
       `;
