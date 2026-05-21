@@ -704,25 +704,55 @@ function afficherDuels() {
           // COULEURS
           // -------------------
 
-          if (
-            pronostics[cle]
-            === candidat1.id
-          ) {
+if (
+  pronostics[cle]
+  === candidat1.id
+) {
 
-            bouton1.style.backgroundColor =
-              "lightgreen";
+  if (
+    refus.includes(candidat1.id)
+  ) {
 
-          }
+    bouton1.style.backgroundColor =
+      "tomato";
 
-          if (
-            pronostics[cle]
-            === candidat2.id
-          ) {
+  }
 
-            bouton2.style.backgroundColor =
-              "tomato";
+  else if (
+    acceptables.includes(candidat1.id)
+  ) {
 
-          }
+    bouton1.style.backgroundColor =
+      "lightgreen";
+
+  }
+
+}
+
+if (
+  pronostics[cle]
+  === candidat2.id
+) {
+
+  if (
+    refus.includes(candidat2.id)
+  ) {
+
+    bouton2.style.backgroundColor =
+      "tomato";
+
+  }
+
+  else if (
+    acceptables.includes(candidat2.id)
+  ) {
+
+    bouton2.style.backgroundColor =
+      "lightgreen";
+
+  }
+
+}
 
           // -------------------
           // AJOUT
