@@ -618,103 +618,122 @@ function afficherDuels() {
 
   container.innerHTML = "";
 
-  const candidatsRefuses =
+  const candidatsVisibles =
     candidats.filter(c =>
-      refus.includes(c.id)
+      preselection.includes(c.id)
     );
 
-  const candidatsAcceptables =
-    candidats.filter(c =>
-      acceptables.includes(c.id)
-    );
+  candidatsVisibles.forEach(
+    (candidat1, index1) => {
 
-    
+      candidatsVisibles.forEach(
+        (candidat2, index2) => {
 
-  candidatsAcceptables.forEach(
-    acceptable => {
+          // éviter doublons et auto-duels
 
-      candidatsRefuses.forEach(
-        refuse => {
-
-if (acceptable.id === refuse.id) {
-  return;
-}
+          if (
+            index2 <= index1
+          ) {
+            return;
+          }
 
           const duel =
             document.createElement("div");
 
-duel.style.padding =
-  "8px";
+          duel.style.padding =
+            "8px";
 
-duel.style.border =
-  "2px solid #444";
+          duel.style.border =
+            "2px solid #444";
 
-duel.style.borderRadius =
-  "8px";
+          duel.style.borderRadius =
+            "8px";
 
+          // -------------------
+          // BOUTON 1
+          // -------------------
 
-
-          const boutonAcceptable =
+          const bouton1 =
             document.createElement("button");
 
-          boutonAcceptable.innerText =
-            acceptable.nom + " gagne";
+          bouton1.innerText =
+            candidat1.nom + " gagne";
 
-          const boutonRefuse =
+          // -------------------
+          // BOUTON 2
+          // -------------------
+
+          const bouton2 =
             document.createElement("button");
 
-          boutonRefuse.innerText =
-            refuse.nom + " gagne";
+          bouton2.innerText =
+            candidat2.nom + " gagne";
+
+          // -------------------
+          // CLE
+          // -------------------
 
           const cle =
-            acceptable.id
+            candidat1.id
             + "-"
-            + refuse.id;
+            + candidat2.id;
 
-          boutonAcceptable.onclick = () => {
+          // -------------------
+          // CLICS
+          // -------------------
+
+          bouton1.onclick = () => {
 
             pronostics[cle] =
-              acceptable.id;
+              candidat1.id;
 
             mettreAJour();
 
           };
 
-          boutonRefuse.onclick = () => {
+          bouton2.onclick = () => {
 
             pronostics[cle] =
-              refuse.id;
+              candidat2.id;
 
             mettreAJour();
 
           };
+
+          // -------------------
+          // COULEURS
+          // -------------------
 
           if (
             pronostics[cle]
-            === acceptable.id
+            === candidat1.id
           ) {
 
-            boutonAcceptable.style.backgroundColor =
+            bouton1.style.backgroundColor =
               "lightgreen";
 
           }
 
           if (
             pronostics[cle]
-            === refuse.id
+            === candidat2.id
           ) {
 
-            boutonRefuse.style.backgroundColor =
+            bouton2.style.backgroundColor =
               "tomato";
 
           }
 
+          // -------------------
+          // AJOUT
+          // -------------------
+
           duel.appendChild(
-            boutonAcceptable
+            bouton1
           );
 
           duel.appendChild(
-            boutonRefuse
+            bouton2
           );
 
           container.appendChild(
@@ -787,7 +806,7 @@ function afficherScenariosPolitiques() {
       </th>
 
       <th align="left">
-        Gouvernement probablement défini par ...
+        Le pouvoir gouvernemental pourrait finalement s’organiser autour de...
       </th>
 
     </tr>
