@@ -17,6 +17,8 @@ const optionsInstitutionnelles = {};
 
 const coalitionsOuvertes = {};
 
+const potentielsSecondTour = {};
+
 let presidentActif = null;
 
 const presidentsEvalues = [];
@@ -926,7 +928,7 @@ function afficherScenariosPolitiques() {
       </th>
 
       <th align="left">
-        Le pouvoir gouvernemental pourrait finalement s’organiser autour de...
+        Pivot gouvernemental possible
       </th>
 
     </tr>
@@ -1129,15 +1131,196 @@ html += `
 
     }
   );
+const scenariosAcceptables =
+  candidatsVisibles.filter(
+    candidat =>
+      acceptables.includes(
+        candidat.id
+      )
+  );
 
-  html += `</table>`;
+html += `
+
+  </table>
+
+  <div style="
+    margin-top:40px;
+    padding-top:20px;
+    border-top:2px solid #ccc;
+  ">
+
+    <h4>
+      Mon scénario
+    </h4>
+
+    <p>
+
+      Parmi les candidats
+      que vous accepteriez
+      de soutenir au second tour
+      et qui pourraient devenir
+      des pivots gouvernementaux,
+      voici ceux qu’il pourrait devenir
+      stratégique de soutenir
+      dès le premier tour :
+
+    </p>
+
+`;
+
+scenariosAcceptables.forEach(
+  candidat => {
+
+    html += `
+
+      <div style="
+        padding:10px;
+        margin-bottom:10px;
+        border-radius:8px;
+        background:#f2f2f2;
+      ">
+
+        <strong>
+          ${candidat.nom}
+        </strong>
+
+      </div>
+
+    `;
+
+  }
+);
+
+html += `</div>`;
+
 
   container.innerHTML =
     html;
 
 }
 
+function afficherPotentielsSecondTour() {
+
+  const container =
+    document.getElementById(
+      "potentiels-second-tour"
+    );
+
+  const totalContainer =
+    document.getElementById(
+      "total-potentiels"
+    );
+
+  container.innerHTML = "";
+
+
+
+  const candidatsVisibles =
+    candidats.filter(c =>
+      preselection.includes(c.id)
+    );
+
+  candidatsVisibles.forEach(
+    candidat => {
+
+      const ligne =
+        document.createElement("div");
+
+      ligne.className =
+        "ligne-potentiel";
+
+      const label =
+        document.createElement("div");
+
+      label.innerText =
+        candidat.nom;
+
+     const slider =
+  document.createElement("input");
+
+slider.type =
+  "range";
+
+slider.min = 0;
+
+slider.max = 100;
+
+slider.step = 1;
+
+slider.value =
+  potentielsSecondTour[
+    candidat.id
+  ] || 0;
+
+const valeur =
+  document.createElement("span");
+
+valeur.innerText =
+  slider.value + "%";
+
+slider.oninput = () => {
+
+
+  potentielsSecondTour[
+    candidat.id
+  ] = Number(
+    slider.value
+  );
+
+  valeur.innerText =
+    slider.value + "%";
+
+    const total =
+  Object.values(
+    potentielsSecondTour
+  ).reduce(
+    (a, b) => a + b,
+    0
+  );
+
+totalContainer.innerHTML =
+  `
+  Perception globale : ${total}
+  `;
+
+
+  calculerStrategie();
+
+};
+
+ligne.appendChild(label);
+
+ligne.appendChild(slider);
+
+ligne.appendChild(valeur);
+
+      container.appendChild(
+        ligne
+      );
+
+    }
+  );
+
+const total =
+  Object.values(
+    potentielsSecondTour
+  ).reduce(
+    (a, b) => a + b,
+    0
+  );
+
+  totalContainer.innerHTML =
+    `
+Perception globale :
+${total}
+    `;
+
+  
+
+}
+
 function calculerStrategie() {
+
 
   const strategie =
     document.getElementById(
@@ -1234,8 +1417,18 @@ function calculerStrategie() {
             candidat.id
           ];
 
-        const global =
-          victoire * coalition;
+const potentiel =
+  potentielsSecondTour[
+    candidat.id
+  ] || 0;
+
+const global =
+
+  (victoire * 3)
+
+  + (coalition * 2)
+
+  + potentiel;
 
         return {
           candidat,
@@ -1261,6 +1454,56 @@ function calculerStrategie() {
   // -------------------
 
   html += `
+
+  <div style="
+    margin-bottom:20px;
+  ">
+
+    <div style="
+      font-size:28px;
+      font-weight:bold;
+      margin-bottom:15px;
+    ">
+
+      Pivot gouvernemental possible
+
+    </div>
+
+    <div style="
+      line-height:1.5;
+      font-size:15px;
+    ">
+
+      Parmi les candidats encore acceptables
+      pour vous, certains semblent plus capables :
+
+      <ul>
+
+        <li>
+          d’atteindre un second tour acceptable
+        </li>
+
+        <li>
+          de battre les candidats refusés
+        </li>
+
+        <li>
+          de construire une coalition gouvernementale
+        </li>
+
+      </ul>
+
+      Ces profils peuvent devenir
+      des pivots stratégiques
+      pour votre vote du premier tour.
+
+    </div>
+
+  </div>
+
+`;
+
+  html += `
     <table style="
       width:100%;
       border-collapse:collapse;
@@ -1281,7 +1524,9 @@ function calculerStrategie() {
       <th>
         Alliances <br> pour gouverner
       </th>
-
+<th>
+  Potentiel <br> second tour
+</th>
       <th>
         Note <br> Global
       </th>
@@ -1331,6 +1576,13 @@ function calculerStrategie() {
           <td align="center">
             ${resultat.coalition}
           </td>
+          <td align="center">
+  ${
+    potentielsSecondTour[
+      resultat.candidat.id
+    ] || 0
+  }%
+</td>
 
           <td align="center">
             <strong>
@@ -1344,8 +1596,187 @@ function calculerStrategie() {
     }
   );
 
-  html += `</table>`;
 
+  html += `</table>`;
+const voteUtile =
+  document.getElementById(
+    "vote-utile-final"
+  );
+
+const candidatsAcceptables =
+  resultats.filter(
+    r =>
+      acceptables.includes(
+        r.candidat.id
+      )
+  );
+
+if (
+  candidatsAcceptables.length > 0
+) {
+
+  const meilleur =
+    candidatsAcceptables[0];
+
+voteUtile.innerHTML =
+`
+<h2>
+  Vote utile présidentiel
+</h2>
+
+<p>
+
+  Un candidat acceptable pour vous
+  semble capable :
+
+</p>
+
+<ul>
+
+  <li>
+    d’atteindre le second tour,
+  </li>
+
+  <li>
+    de battre des candidats refusés,
+  </li>
+
+  <li>
+    et de gouverner durablement.
+  </li>
+
+</ul>
+
+<p>
+
+  Dans cette situation,
+  votre vote utile cohérent
+  dès le premier tour
+  pourrait être :
+
+</p>
+
+<div class="grand-resultat">
+
+  → ${meilleur.candidat.nom}
+
+</div>
+`;  
+voteUtile.innerHTML =
+`
+<h2>
+  Vote utile de coalition
+</h2>
+
+<p>
+
+  Aucun candidat acceptable
+  ne semble actuellement capable
+  de gagner l’élection présidentielle.
+
+</p>
+
+<p>
+
+  Cependant,
+  un candidat acceptable
+  pourrait devenir
+  un pivot gouvernemental important
+  dans une future coalition.
+
+</p>
+
+<p>
+
+  Renforcer ce candidat
+  dès le premier tour
+  peut augmenter sa capacité future :
+
+</p>
+
+<ul>
+
+  <li>
+    de négociation,
+  </li>
+
+  <li>
+    de coalition,
+  </li>
+
+  <li>
+    et d’influence gouvernementale.
+  </li>
+
+</ul>
+
+<div class="grand-resultat">
+
+  → ${pivot.nom}
+
+</div>
+`;
+
+voteUtile.innerHTML =
+`
+<h2>
+  Aucun scénario cohérent
+</h2>
+
+<p>
+
+  Aucun candidat acceptable
+  ne semble actuellement capable :
+
+</p>
+
+<ul>
+
+  <li>
+    de gagner le second tour,
+  </li>
+
+  <li>
+    ou de devenir
+    un pivot gouvernemental stable.
+  </li>
+
+</ul>
+
+<p>
+
+  Vous pouvez modifier :
+
+</p>
+
+<ul>
+
+  <li>
+    vos refus,
+  </li>
+
+  <li>
+    vos prévisions de duel,
+  </li>
+
+  <li>
+    ou vos hypothèses de coalition.
+  </li>
+
+</ul>
+`;
+
+}
+
+else {
+
+  voteUtile.innerHTML =
+    `
+    → aucun scénario cohérent
+    n’émerge actuellement
+    `;
+
+}
   strategie.innerHTML =
     html;
 
@@ -1364,6 +1795,8 @@ if (
   afficherDuels();
 
   afficherCoalitions();
+
+  afficherPotentielsSecondTour();
 
   calculerStrategie();
 

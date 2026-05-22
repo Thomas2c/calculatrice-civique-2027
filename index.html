@@ -13,8 +13,28 @@
 
 <body>
 
-  <h1>Calculatrice civique 2027</h1>
+ <h1>
 
+  Pour qui voter au premier tour de l’élection présidentielle de 2027 ?
+
+</h1>
+
+<p class="sous-titre">
+
+  Et si on se posait calmement
+  la question du vote utile ?
+
+</p>
+<div class="manifeste">
+
+  Une élection ne sert pas seulement
+  à choisir un président.
+
+  Elle sert aussi
+  à produire un pouvoir capable
+  de gouverner durablement. Avec le parlement en particulier. 
+
+</div>
  <div class="infos">
 
   <div class="info-box">
@@ -25,10 +45,17 @@
 
     <p>
 
-      Cette simulation explore les stratégies possibles du premier tour des élections présidentielles de 2027.
-
-      Elle permet de tester différents scénarios de second tour et leurs conséquences sur un vote stratégique dès le premier tour.
-
+      Cette simulation explore les stratégies possibles du premier tour des élections présidentielles de 2027 en tenant compte du paysage politique. 
+      Elle permet de tester différents scénarios de second tour puis de définition du pivot gouvernemental et parlementaire.
+  <br><br>
+ Suivez les étapes : 
+      <br>- préqualification de candidats susceptibles d'aller au second tour (déjà rempli mais modifiable), 
+      <br>- vos préférences parmi les candidats, ceux que vous refusez de soutenir dans tous les cas, ceux que vous acceptez de soutenir si nécéssaire, 
+      <br>- vos prévisions de duels pour le second tour
+      <br>- vos estimation sur la capacité à gouverner, avec le parlement et avec des ministres 
+      <br>- les chances qu'ils ont selon vous d'arriver au second tour
+<br>
+          Au final : une recommandation de vote stratégique dès le premier tour, selon vos préférences et vos anticipations.<br>
     </p>
 
   </div>
@@ -36,17 +63,11 @@
   <div class="info-box">
 
     <h2>
-      Fonctionnement technique
-    </h2>
+      Fonctionnement technique   </h2>
 
     <p>
 
-      Aucun compte.
-      Aucun cookie.
-      Aucune donnée personnelle.
-
-      Tous les calculs sont effectués
-      localement dans votre navigateur.
+      Techniquement : Aucun compte. Aucun cookie. Aucune donnée personnelle. Tous les calculs sont effectués localement dans votre navigateur.
 
     </p>
 
@@ -138,7 +159,8 @@
     <p>
       Pour quels candidats
       pourriez-vous encore voter
-      au second tour ?
+      au second tour, même si ce n'est pas parmi vos préférés, 
+      en cas du duel avec un candidat que vous refusez ?
     </p>
 
     <div id="liste-acceptables"></div>
@@ -159,6 +181,18 @@
     Quel candidat gagnerait
     ces duels selon vous ?
   </p>
+
+  <p class="explication-duels">
+
+  Si vous souhaitez éviter
+  un second tour composé uniquement
+  de candidats que vous refusez,
+  il peut devenir stratégique
+  de soutenir dès le premier tour
+  des candidats que vous jugez
+  encore acceptables au second tour.
+
+</p>
 
   <div id="scenarios"></div>
 
@@ -254,7 +288,47 @@
 </div>
 </div>
 
+<div class="potentiel-full">
 
+  <h2>
+    6. Potentiel d’accès au second tour
+  </h2>
+
+<p>
+
+  Voici à nouveau les candidats
+  que vous avez retenus.
+
+  Estimez librement leurs chances
+  d’accéder au second tour.
+
+  Ces valeurs servent uniquement
+  à exprimer votre perception relative
+  des rapports de force du premier tour.
+
+</p>
+
+  <div id="potentiels-second-tour">
+
+  </div>
+
+  <div id="total-potentiels">
+
+    Total : 0 / 200
+
+  </div>
+
+</div>
+
+<div class="conclusion">
+
+ 
+  <div id="vote-utile-final">
+
+  </div>
+
+  
+</div>
 
   <script src="candidats.js"></script>
   <script src="app.js"></script>
