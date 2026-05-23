@@ -744,8 +744,9 @@ function afficherDuels() {
 
             pronostics[cle] =
               candidat1.id;
-
+console.log(pronostics);
             mettreAJour();
+            
 
           };
 
@@ -753,8 +754,9 @@ function afficherDuels() {
 
             pronostics[cle] =
               candidat2.id;
-
+     console.log(pronostics);
             mettreAJour();
+       
 
           };
 
@@ -1319,20 +1321,29 @@ ${total}
 
 }
 
+
 function calculerStrategie() {
 
+  // -------------------
+  // CANDIDATS VISIBLES
+  // -------------------
+
+  const candidatsVisibles =
+    candidats.filter(c =>
+      preselection.includes(c.id)
+    );
 
   const strategie =
     document.getElementById(
       "strategie"
     );
 
-  let html = "";
-
-  const candidatsVisibles =
-    candidats.filter(c =>
-      preselection.includes(c.id)
+  const voteUtile =
+    document.getElementById(
+      "vote-utile-final"
     );
+
+  let html = "";
 
   const scoresVictoire = {};
 
@@ -1348,21 +1359,26 @@ function calculerStrategie() {
 
   });
 
-  Object.values(pronostics)
-    .forEach(vainqueurId => {
+  for (
+    const cle in pronostics
+  ) {
 
-      if (
-        scoresVictoire[vainqueurId]
-        !== undefined
-      ) {
+    const vainqueurId =
+      pronostics[cle];
 
-        scoresVictoire[
-          vainqueurId
-        ]++;
+    if (
+      scoresVictoire[
+        vainqueurId
+      ] !== undefined
+    ) {
 
-      }
+      scoresVictoire[
+        vainqueurId
+      ]++;
 
-    });
+    }
+
+  }
 
   // -------------------
   // SCORE COALITION
@@ -1373,13 +1389,20 @@ function calculerStrategie() {
 
       let score = 0;
 
-      candidats.forEach(
-        ministre => {
+      for (
+        const cle in coalitions
+      ) {
 
-          const cle =
-            president.id
-            + "-"
-            + ministre.id;
+        const morceaux =
+          cle.split("-");
+
+        const presidentId =
+          Number(morceaux[0]);
+
+        if (
+          presidentId ===
+          president.id
+        ) {
 
           if (
             coalitions[cle]
@@ -1390,7 +1413,8 @@ function calculerStrategie() {
           }
 
         }
-      );
+
+      }
 
       scoresCoalition[
         president.id
@@ -1417,18 +1441,18 @@ function calculerStrategie() {
             candidat.id
           ];
 
-const potentiel =
-  potentielsSecondTour[
-    candidat.id
-  ] || 0;
+        const potentiel =
+          potentielsSecondTour[
+            candidat.id
+          ] ?? 50;
 
-const global =
+        const global =
 
-  (victoire * 3)
+          (victoire * 3)
 
-  + (coalition * 2)
+          + (coalition * 2)
 
-  + potentiel;
+          + potentiel;
 
         return {
           candidat,
@@ -1450,7 +1474,7 @@ const global =
   );
 
   // -------------------
-  // AFFICHAGE
+  // TITRE
   // -------------------
 
   html += `
@@ -1503,6 +1527,10 @@ const global =
 
 `;
 
+  // -------------------
+  // TABLEAU
+  // -------------------
+
   html += `
     <table style="
       width:100%;
@@ -1513,6 +1541,7 @@ const global =
 
   html += `
     <tr>
+
       <th align="left">
         Candidat
       </th>
@@ -1524,12 +1553,15 @@ const global =
       <th>
         Alliances <br> pour gouverner
       </th>
-<th>
-  Potentiel <br> second tour
-</th>
+
       <th>
-        Note <br> Global
+        Potentiel <br> second tour
       </th>
+
+      <th>
+        Note <br> globale
+      </th>
+
     </tr>
   `;
 
@@ -1561,6 +1593,7 @@ const global =
       }
 
       html += `
+
         <tr style="
           background:${couleur};
         ">
@@ -1576,13 +1609,14 @@ const global =
           <td align="center">
             ${resultat.coalition}
           </td>
+
           <td align="center">
-  ${
-    potentielsSecondTour[
-      resultat.candidat.id
-    ] || 0
-  }%
-</td>
+            ${
+              potentielsSecondTour[
+                resultat.candidat.id
+              ] || 0
+            }%
+          </td>
 
           <td align="center">
             <strong>
@@ -1591,196 +1625,120 @@ const global =
           </td>
 
         </tr>
+
       `;
 
     }
   );
 
-
   html += `</table>`;
-const voteUtile =
-  document.getElementById(
-    "vote-utile-final"
-  );
 
-const candidatsAcceptables =
-  resultats.filter(
-    r =>
-      acceptables.includes(
-        r.candidat.id
-      )
-  );
+  // -------------------
+  // INJECTION TABLEAU
+  // -------------------
 
-if (
-  candidatsAcceptables.length > 0
-) {
-
-  const meilleur =
-    candidatsAcceptables[0];
-
-voteUtile.innerHTML =
-`
-<h2>
-  Vote utile présidentiel
-</h2>
-
-<p>
-
-  Un candidat acceptable pour vous
-  semble capable :
-
-</p>
-
-<ul>
-
-  <li>
-    d’atteindre le second tour,
-  </li>
-
-  <li>
-    de battre des candidats refusés,
-  </li>
-
-  <li>
-    et de gouverner durablement.
-  </li>
-
-</ul>
-
-<p>
-
-  Dans cette situation,
-  votre vote utile cohérent
-  dès le premier tour
-  pourrait être :
-
-</p>
-
-<div class="grand-resultat">
-
-  → ${meilleur.candidat.nom}
-
-</div>
-`;  
-voteUtile.innerHTML =
-`
-<h2>
-  Vote utile de coalition
-</h2>
-
-<p>
-
-  Aucun candidat acceptable
-  ne semble actuellement capable
-  de gagner l’élection présidentielle.
-
-</p>
-
-<p>
-
-  Cependant,
-  un candidat acceptable
-  pourrait devenir
-  un pivot gouvernemental important
-  dans une future coalition.
-
-</p>
-
-<p>
-
-  Renforcer ce candidat
-  dès le premier tour
-  peut augmenter sa capacité future :
-
-</p>
-
-<ul>
-
-  <li>
-    de négociation,
-  </li>
-
-  <li>
-    de coalition,
-  </li>
-
-  <li>
-    et d’influence gouvernementale.
-  </li>
-
-</ul>
-
-<div class="grand-resultat">
-
-  → ${pivot.nom}
-
-</div>
-`;
-
-voteUtile.innerHTML =
-`
-<h2>
-  Aucun scénario cohérent
-</h2>
-
-<p>
-
-  Aucun candidat acceptable
-  ne semble actuellement capable :
-
-</p>
-
-<ul>
-
-  <li>
-    de gagner le second tour,
-  </li>
-
-  <li>
-    ou de devenir
-    un pivot gouvernemental stable.
-  </li>
-
-</ul>
-
-<p>
-
-  Vous pouvez modifier :
-
-</p>
-
-<ul>
-
-  <li>
-    vos refus,
-  </li>
-
-  <li>
-    vos prévisions de duel,
-  </li>
-
-  <li>
-    ou vos hypothèses de coalition.
-  </li>
-
-</ul>
-`;
-
-}
-
-else {
-
-  voteUtile.innerHTML =
-    `
-    → aucun scénario cohérent
-    n’émerge actuellement
-    `;
-
-}
   strategie.innerHTML =
     html;
 
+  // -------------------
+  // CONCLUSION FINALE
+  // -------------------
+
+  const candidatsAcceptables =
+    resultats.filter(
+      r =>
+        acceptables.includes(
+          r.candidat.id
+        )
+    );
+
+  if (
+    candidatsAcceptables.length > 0
+  ) {
+
+    const meilleur =
+      candidatsAcceptables[0];
+
+    voteUtile.innerHTML =
+      `
+
+      <h2>
+        Vote utile présidentiel
+      </h2>
+
+      <p>
+
+        Ce classement combine :
+
+      </p>
+
+      <ul>
+
+        <li>
+          vos préférences politiques,
+        </li>
+
+        <li>
+          vos prévisions de duel,
+        </li>
+
+        <li>
+          vos hypothèses de coalition,
+        </li>
+
+        <li>
+          et vos estimations d’accès au second tour.
+        </li>
+
+      </ul>
+
+      <p>
+
+        Dans votre scénario,
+        le vote utile cohérent
+        dès le premier tour
+        pourrait être :
+
+      </p>
+
+      <div style="
+        font-size:30px;
+        font-weight:bold;
+        margin-top:20px;
+      ">
+
+        → ${meilleur.candidat.nom}
+
+      </div>
+
+      `;
+
+  }
+
+  else {
+
+    voteUtile.innerHTML =
+      `
+
+      <h2>
+        Aucun scénario cohérent
+      </h2>
+
+      <p>
+
+        Aucun candidat acceptable
+        ne semble actuellement capable
+        de gagner ou de devenir
+        un pivot gouvernemental stable.
+
+      </p>
+
+      `;
+
+  }
+
 }
+
 
 function mettreAJour() {
 
