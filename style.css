@@ -966,3 +966,97 @@ button:hover {
   line-height: 1.7;
 
 }
+
+.notice-modele {
+
+  margin-top: 70px;
+
+  padding: 28px;
+
+  border-top: 3px solid #222;
+
+  background: #f3f3f3;
+
+  color: #333;
+
+  font-size: 13px;
+
+  line-height: 1.45;
+
+}
+
+.notice-entete {
+
+  max-width: 900px;
+
+  margin-bottom: 20px;
+
+}
+
+.notice-entete h2 {
+
+  margin-top: 0;
+
+  margin-bottom: 8px;
+
+  font-size: 22px;
+
+}
+
+.notice-entete p {
+
+  margin: 0;
+
+  color: #555;
+
+}
+
+.notice-grille {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 14px;
+
+}
+
+.notice-grille article {
+
+  padding: 14px;
+
+  border: 1px solid #ddd;
+
+  background: #fff;
+
+  border-radius: 6px;
+
+}
+
+.notice-grille h3 {
+
+  margin-top: 0;
+
+  margin-bottom: 8px;
+
+  font-size: 14px;
+
+}
+
+.notice-grille p {
+
+  margin: 0;
+
+}
+
+@media (max-width: 900px) {
+
+  .notice-grille {
+
+    grid-template-columns:
+      1fr;
+
+  }
+
+}
