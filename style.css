@@ -138,6 +138,211 @@ button:hover {
 
 }
 
+.sauvegarde {
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.1);
+
+}
+
+.sauvegarde h2 {
+
+  margin-top: 0;
+
+}
+
+.actions-sauvegarde {
+
+  display: flex;
+
+  gap: 12px;
+
+  flex-wrap: wrap;
+
+  align-items: center;
+
+  margin-top: 15px;
+
+}
+
+.actions-sauvegarde button,
+.bouton-fichier {
+
+  width: auto;
+
+  margin-bottom: 0;
+
+  padding: 10px 14px;
+
+  border-radius: 8px;
+
+  background: #eaeaea;
+
+  cursor: pointer;
+
+}
+
+.bouton-fichier {
+
+  display: inline-block;
+
+}
+
+#charger-configuration {
+
+  display: none;
+
+}
+
+#message-sauvegarde {
+
+  margin-top: 12px;
+
+  font-weight: bold;
+
+  color: #326b32;
+
+}
+
+.influences-full {
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 12px;
+
+  margin-bottom: 20px;
+
+  box-shadow:
+    0 2px 8px rgba(0,0,0,0.1);
+
+}
+
+#influences-candidats {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-top: 20px;
+
+}
+
+.influence-colonne {
+
+  border: 2px solid #dddddd;
+
+  border-radius: 8px;
+
+  background: #fafafa;
+
+  min-height: 360px;
+
+  padding: 14px;
+
+}
+
+.influence-colonne-survol {
+
+  border-color: #4da3ff;
+
+  background: #eef7ff;
+
+}
+
+.influence-faible {
+
+  border-top: 6px solid #c8c8c8;
+
+}
+
+.influence-moyenne {
+
+  border-top: 6px solid #f4c542;
+
+}
+
+.influence-forte {
+
+  border-top: 6px solid #4da3ff;
+
+}
+
+.influence-entete {
+
+  margin-bottom: 14px;
+
+}
+
+.influence-entete h3 {
+
+  margin-top: 0;
+
+  margin-bottom: 10px;
+
+}
+
+.influence-entete p {
+
+  margin-top: 0;
+
+  line-height: 1.45;
+
+}
+
+.influence-entete ul {
+
+  margin: 0;
+
+  padding-left: 18px;
+
+  line-height: 1.4;
+
+}
+
+.influence-liste {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+}
+
+.influence-carte {
+
+  margin-bottom: 0;
+
+  background: white;
+
+  border: 1px solid #dddddd;
+
+  box-shadow:
+    0 1px 3px rgba(0,0,0,0.08);
+
+  cursor: grab;
+
+}
+
+.influence-carte:active {
+
+  cursor: grabbing;
+
+}
+
 #compteur-preselection {
 
   margin-top: 15px;
@@ -198,21 +403,15 @@ button:hover {
 }
 
 
-.dashboard-bas .colonne:first-child {
-
-  flex: 2;
-
-}
-
-.dashboard-bas .strategie {
-
-  flex: 1;
-
-}
-
 .strategie table {
 
   color: black;
+
+}
+
+.strategie-full {
+
+  margin-bottom: 20px;
 
 }
 
@@ -232,6 +431,61 @@ button:hover {
   gap: 12px;
 
   margin-top: 20px;
+
+}
+
+.relations-gouvernementales {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-top: 25px;
+
+}
+
+.relation-colonne {
+
+  border: 1px solid #dddddd;
+
+  border-radius: 8px;
+
+  padding: 14px;
+
+  background: #fafafa;
+
+}
+
+.ministrables-colonne {
+
+  border-top: 6px solid #8ecae6;
+
+}
+
+.opposants-colonne {
+
+  border-top: 6px solid #ffb703;
+
+}
+
+.relation-entete h3 {
+
+  margin-top: 0;
+
+  margin-bottom: 10px;
+
+}
+
+.relation-entete p {
+
+  font-size: 14px;
+
+  line-height: 1.45;
+
+  margin-top: 0;
 
 }
 
@@ -262,6 +516,18 @@ button:hover {
   .dashboard-bas .colonne {
 
     flex: 1;
+
+  }
+
+  #influences-candidats {
+
+    grid-template-columns: 1fr;
+
+  }
+
+  .relations-gouvernementales {
+
+    grid-template-columns: 1fr;
 
   }
 
@@ -349,9 +615,9 @@ button:hover {
 
   margin-top: 40px;
 
-  background: #111;
+  background: white;
 
-  color: white;
+  color: #111;
 
   padding: 30px;
 
@@ -367,7 +633,196 @@ button:hover {
 
   margin-bottom: 20px;
 
-  font-size: 36px;
+  font-size: 16px;
+
+  font-weight: normal;
+
+}
+
+.carte-stabilite {
+
+  margin-top: 28px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid #dddddd;
+
+}
+
+.carte-stabilite h3 {
+
+  margin-top: 0;
+
+}
+
+.cartes-stabilite {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(320px, 1fr));
+
+  gap: 16px;
+
+  margin-top: 20px;
+
+}
+
+.candidat-stabilite {
+
+  border: 1px solid #dddddd;
+
+  border-radius: 8px;
+
+  padding: 16px;
+
+  background: #fafafa;
+
+}
+
+.candidat-acceptable {
+
+  border-left: 8px solid #79d279;
+
+}
+
+.candidat-refus {
+
+  border-left: 8px solid #ff8f8f;
+
+}
+
+.candidat-stabilite-entete {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  align-items: center;
+
+  margin-bottom: 14px;
+
+}
+
+.candidat-stabilite-entete strong {
+
+  font-size: 18px;
+
+}
+
+.candidat-stabilite-entete span {
+
+  padding: 4px 8px;
+
+  border-radius: 8px;
+
+  background: #eeeeee;
+
+  font-size: 13px;
+
+}
+
+.scenario-ligne {
+
+  margin-bottom: 12px;
+
+  font-size: 15px;
+
+}
+
+.badge-refus {
+
+  display: inline-block;
+
+  margin-left: 8px;
+
+  padding: 3px 7px;
+
+  border-radius: 8px;
+
+  background: #ffb3b3;
+
+  color: #111;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+}
+
+.barre-comparaison {
+
+  margin-top: 14px;
+
+}
+
+.barre-libelle {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 12px;
+
+  font-weight: bold;
+
+  font-size: 14px;
+
+}
+
+.barre-fond {
+
+  height: 14px;
+
+  margin-top: 6px;
+
+  border-radius: 8px;
+
+  background: #e7e7e7;
+
+  overflow: hidden;
+
+}
+
+.barre-remplissage {
+
+  height: 100%;
+
+  border-radius: 8px;
+
+}
+
+.barre-soutiens {
+
+  background: #79d279;
+
+}
+
+.barre-oppositions {
+
+  background: #ff8f8f;
+
+}
+
+.barre-detail {
+
+  margin-top: 5px;
+
+  color: #555;
+
+  font-size: 13px;
+
+}
+
+.lecture-stabilite {
+
+  margin-top: 14px;
+
+  padding-top: 12px;
+
+  border-top: 1px solid #e0e0e0;
 
   font-weight: bold;
 
@@ -388,6 +843,8 @@ button:hover {
   border-radius: 16px;
 
   margin-top: 30px;
+
+  margin-bottom: 30px;
 
   box-shadow:
     0 2px 8px rgba(0,0,0,0.1);

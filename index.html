@@ -15,14 +15,14 @@
 
  <h1>
 
-  Pour qui voter au premier tour de l’élection présidentielle de 2027 ?
+  Simulateur politique 2027
 
 </h1>
 
 <p class="sous-titre">
 
   Et si on se posait calmement
-  la question du vote utile ?
+  la question des conséquences institutionnelles ?
 
 </p>
 <div class="manifeste">
@@ -45,17 +45,17 @@
 
     <p>
 
-      Cette simulation explore les stratégies possibles du premier tour des élections présidentielles de 2027 en tenant compte du paysage politique. 
-      Elle permet de tester différents scénarios de second tour puis de définition du pivot gouvernemental et parlementaire.
+      Cette simulation explore les conséquences institutionnelles possibles de l’élection présidentielle de 2027 en tenant compte du paysage politique. 
+      Elle permet de tester différents scénarios de second tour puis d’observer les coalitions, les cohabitations et les pivots gouvernementaux plausibles.
   <br><br>
  Suivez les étapes : 
       <br>- préqualification de candidats susceptibles d'aller au second tour (déjà rempli mais modifiable), 
-      <br>- vos préférences parmi les candidats, ceux que vous refusez de soutenir dans tous les cas, ceux que vous acceptez de soutenir si nécéssaire, 
+      <br>- vos préférences parmi les candidats, ceux que vous refusez dans tous les cas, ceux que vous acceptez dans certaines configurations, 
       <br>- vos prévisions de duels pour le second tour
-      <br>- vos estimation sur la capacité à gouverner, avec le parlement et avec des ministres 
+      <br>- vos estimations sur la capacité à gouverner, avec le parlement et avec des ministres 
       <br>- les chances qu'ils ont selon vous d'arriver au second tour
 <br>
-          Au final : une recommandation de vote stratégique dès le premier tour, selon vos préférences et vos anticipations.<br>
+          Au final : une lecture institutionnelle neutre des configurations produites par vos hypothèses.<br>
     </p>
 
   </div>
@@ -75,10 +75,44 @@
 
 </div>
 
+<div class="sauvegarde">
+
+  <h2>
+    Sauvegarder ou charger une configuration
+  </h2>
+
+  <p>
+    Vous pouvez enregistrer vos choix sur votre ordinateur,
+    même si le scénario n’est pas terminé,
+    puis reprendre plus tard à partir du même fichier.
+  </p>
+
+  <div class="actions-sauvegarde">
+
+    <button id="sauvegarder-configuration">
+      Sauvegarder mes choix
+    </button>
+
+    <label class="bouton-fichier" for="charger-configuration">
+      Charger une configuration
+    </label>
+
+    <input
+      id="charger-configuration"
+      type="file"
+      accept="application/json"
+    >
+
+  </div>
+
+  <div id="message-sauvegarde"></div>
+
+</div>
+
 <div class="preselection">
 
   <h2>
-    Préqualification
+    1. Présidentiables plausibles
   </h2>
 
   <p>
@@ -128,6 +162,60 @@
 
 
 </div>
+<div class="influences-full">
+
+  <h2>
+    2. Influence politique réelle
+  </h2>
+
+  <p>
+
+    Classez les 25 personnalités selon leur capacité réelle
+    à peser dans la production du pouvoir après l’élection.
+    Ce classement ne mesure pas seulement la popularité électorale :
+    il tient compte des députés, des relais parlementaires,
+    de l’appareil politique, de l’influence médiatique,
+    de la capacité d’agrégation et de la capacité à devenir
+    un pivot de coalition.
+
+  </p>
+
+  <div id="influences-candidats">
+
+  </div>
+
+</div>
+<div class="potentiel-full">
+
+  <h2>
+    3. Potentiel d’accès au second tour
+  </h2>
+
+<p>
+
+  Voici à nouveau les candidats
+  que vous avez retenus.
+
+  Estimez librement leurs chances
+  d’accéder au second tour.
+
+  Ces valeurs servent uniquement
+  à exprimer votre perception relative
+  des rapports de force du premier tour.
+
+</p>
+
+  <div id="potentiels-second-tour">
+
+  </div>
+
+  <div id="total-potentiels">
+
+    Total : 0 / 200
+
+  </div>
+
+</div>
 <div class="dashboard-haut">
 
   <!-- REFUS -->
@@ -135,7 +223,7 @@
   <div class="colonne">
 
     <h2>
-      1. Refus absolus : mes préférences
+      4. Refus absolus : mes préférences
     </h2>
 
     <p>
@@ -153,7 +241,7 @@
   <div class="colonne">
 
     <h2>
-      2. Acceptables : mes préférences 
+      5. Acceptables : mes préférences 
     </h2>
 
     <p>
@@ -174,7 +262,7 @@
 <div class="duels-full">
 
   <h2>
-    3. Duels : mes prédictions
+    6. Duels : mes prédictions
   </h2>
 
   <p>
@@ -184,13 +272,10 @@
 
   <p class="explication-duels">
 
-  Si vous souhaitez éviter
-  un second tour composé uniquement
-  de candidats que vous refusez,
-  il peut devenir stratégique
-  de soutenir dès le premier tour
-  des candidats que vous jugez
-  encore acceptables au second tour.
+  Les duels permettent de distinguer
+  la capacité à gagner une présidentielle
+  de la capacité à construire ensuite
+  un pouvoir gouvernemental durable.
 
 </p>
 
@@ -203,7 +288,7 @@
     <div class="colonne">
 
   <h2>
-    4. Capacité à gouverner : mes prédictions
+    7. Capacité à gouverner : mes prédictions
   </h2>
 
   <p>
@@ -221,19 +306,19 @@
 </div>
 
 
-    <!-- STRATEGIE -->
+  </div>
 
-<div class="colonne strategie">
+<!-- STRATEGIE -->
+
+<div class="colonne strategie strategie-full">
 
   <h2>
-    5. Mes préférences (les couleurs) <br> vs mes prédictions (les scores)
+    8. Les scores
   </h2>
 
   <div id="strategie"></div>
 
 </div>
-
-  </div>
 
  <div class="scenarios-politiques-full">
 
@@ -288,38 +373,6 @@
 </div>
 </div>
 
-<div class="potentiel-full">
-
-  <h2>
-    6. Potentiel d’accès au second tour
-  </h2>
-
-<p>
-
-  Voici à nouveau les candidats
-  que vous avez retenus.
-
-  Estimez librement leurs chances
-  d’accéder au second tour.
-
-  Ces valeurs servent uniquement
-  à exprimer votre perception relative
-  des rapports de force du premier tour.
-
-</p>
-
-  <div id="potentiels-second-tour">
-
-  </div>
-
-  <div id="total-potentiels">
-
-    Total : 0 / 200
-
-  </div>
-
-</div>
-
 <div class="conclusion">
 
  
@@ -331,6 +384,16 @@
 </div>
 
   <script src="candidats.js"></script>
+  <script src="state.js"></script>
+  <script src="persistence.js"></script>
+  <script src="influences.js"></script>
+  <script src="modele-institutionnel.js"></script>
+  <script src="preselection.js"></script>
+  <script src="duels.js"></script>
+  <script src="coalitions.js"></script>
+  <script src="scenarios-politiques.js"></script>
+  <script src="potentiels.js"></script>
+  <script src="strategie.js"></script>
   <script src="app.js"></script>
 
 </body>
