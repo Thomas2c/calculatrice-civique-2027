@@ -347,11 +347,9 @@ function partagerPrevisions() {
 
   const lien =
     window.location.href.split("?")[0]
-    + "?config="
-    + encodeURIComponent(
-      encoderConfiguration(
-        configurationPublique
-      )
+    + "?c="
+    + encoderConfiguration(
+      configurationPublique
     );
 
   if (
@@ -394,7 +392,8 @@ function importerConfigurationDepuisUrl() {
     );
 
   const config =
-    parametres.get("config");
+    parametres.get("c")
+    || parametres.get("config");
 
   if (!config) {
     return;
@@ -428,9 +427,16 @@ function encoderConfiguration(
   configuration
 ) {
 
+  const configurationCompacte =
+    compacterConfigurationPourLien(
+      configuration
+    );
+
   const donnees =
     new TextEncoder().encode(
-      JSON.stringify(configuration)
+      JSON.stringify(
+        configurationCompacte
+      )
     );
 
   let texteBinaire = "";
@@ -444,7 +450,10 @@ function encoderConfiguration(
 
   return btoa(
     texteBinaire
-  );
+  )
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
 
 }
 
@@ -452,8 +461,17 @@ function decoderConfiguration(
   contenu
 ) {
 
+  const contenuBase64 =
+    contenu
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .padEnd(
+        Math.ceil(contenu.length / 4) * 4,
+        "="
+      );
+
   const texteBinaire =
-    atob(contenu);
+    atob(contenuBase64);
 
   const donnees =
     Uint8Array.from(
@@ -462,10 +480,271 @@ function decoderConfiguration(
         caractere.charCodeAt(0)
     );
 
-  return JSON.parse(
+  const configuration =
+    JSON.parse(
     new TextDecoder().decode(
       donnees
     )
+  );
+
+  return decompacterConfigurationDepuisLien(
+    configuration
+  );
+
+}
+
+function compacterConfigurationPourLien(
+  configuration
+) {
+
+  const compacte = {
+    v: 2,
+    p: configuration.preselection || [],
+    d: objetVersListeCompacte(
+      configuration.pronostics
+    ),
+    co: objetVraiVersListe(
+      configuration.coalitions
+    ),
+    ad: objetVraiVersListe(
+      configuration.alliancesDynamiques
+    ),
+    oi: objetVraiVersListe(
+      configuration.optionsInstitutionnelles
+    ),
+    po: objetVraiVersListe(
+      configuration.porositesTactiques
+    ),
+    pt: objetVersListeCompacte(
+      configuration.potentielsSecondTour
+    ),
+    pe: configuration.presidentsEvalues || [],
+    i: compacterInfluences(
+      configuration.influencesPolitiques
+    )
+  };
+
+  if (
+    configuration.presidentActif !== null
+    && configuration.presidentActif !== undefined
+  ) {
+    compacte.pa =
+      configuration.presidentActif;
+  }
+
+  if (configuration.refus) {
+    compacte.r =
+      configuration.refus;
+  }
+
+  if (configuration.acceptables) {
+    compacte.a =
+      configuration.acceptables;
+  }
+
+  return compacte;
+
+}
+
+function decompacterConfigurationDepuisLien(
+  configuration
+) {
+
+  if (
+    !configuration
+  ) {
+    return {};
+  }
+
+  if (
+    configuration.p !== undefined
+  ) {
+
+    return {
+      version:
+        configuration.v || 2,
+      preselection:
+        configuration.p || [],
+      refus:
+        configuration.r || [],
+      acceptables:
+        configuration.a || [],
+      pronostics:
+        listeCompacteVersObjet(
+          configuration.d
+        ),
+      coalitions:
+        listeVersObjetVrai(
+          configuration.co
+        ),
+      alliancesDynamiques:
+        listeVersObjetVrai(
+          configuration.ad
+        ),
+      optionsInstitutionnelles:
+        listeVersObjetVrai(
+          configuration.oi
+        ),
+      porositesTactiques:
+        listeVersObjetVrai(
+          configuration.po
+        ),
+      potentielsSecondTour:
+        listeCompacteVersObjet(
+          configuration.pt
+        ),
+      presidentsEvalues:
+        configuration.pe || [],
+      influencesPolitiques:
+        decompacterInfluences(
+          configuration.i
+        ),
+      presidentActif:
+        configuration.pa ?? null
+    };
+
+  }
+
+  return configuration;
+
+}
+
+function objetVersListeCompacte(
+  objet
+) {
+
+  return Object.entries(
+    objet || {}
+  )
+    .filter(([, valeur]) =>
+      valeur !== false
+      && valeur !== null
+      && valeur !== undefined
+    )
+    .map(([cle, valeur]) =>
+      cle + ":" + valeur
+    );
+
+}
+
+function listeCompacteVersObjet(
+  liste
+) {
+
+  const objet = {};
+
+  (liste || []).forEach(element => {
+
+    const separateur =
+      element.lastIndexOf(":");
+
+    if (separateur === -1) {
+      return;
+    }
+
+    const cle =
+      element.slice(
+        0,
+        separateur
+      );
+
+    const valeur =
+      element.slice(
+        separateur + 1
+      );
+
+    const nombre =
+      Number(valeur);
+
+    objet[cle] =
+      Number.isNaN(nombre)
+        ? valeur
+        : nombre;
+
+  });
+
+  return objet;
+
+}
+
+function objetVraiVersListe(
+  objet
+) {
+
+  return Object.keys(
+    objet || {}
+  ).filter(cle =>
+    objet[cle] === true
+  );
+
+}
+
+function listeVersObjetVrai(
+  liste
+) {
+
+  const objet = {};
+
+  (liste || []).forEach(cle => {
+
+    objet[cle] =
+      true;
+
+  });
+
+  return objet;
+
+}
+
+function compacterInfluences(
+  influences
+) {
+
+  const correspondance = {
+    faible: "f",
+    forte: "F"
+  };
+
+  const compactes = {};
+
+  Object.entries(
+    influences || {}
+  ).forEach(([id, niveau]) => {
+
+    if (
+      niveau !== "moyenne"
+      && correspondance[niveau]
+    ) {
+
+      compactes[id] =
+        correspondance[niveau];
+
+    }
+
+  });
+
+  return compactes;
+
+}
+
+function decompacterInfluences(
+  influencesCompactes
+) {
+
+  const correspondance = {
+    f: "faible",
+    F: "forte"
+  };
+
+  return Object.fromEntries(
+    candidats.map(candidat => [
+      candidat.id,
+      correspondance[
+        influencesCompactes?.[
+          candidat.id
+        ]
+      ] || "moyenne"
+    ])
   );
 
 }
