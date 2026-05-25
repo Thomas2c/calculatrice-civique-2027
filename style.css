@@ -1160,13 +1160,17 @@ button:hover {
 
   .dashboard-haut {
 
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
 
   }
 
   .dashboard-haut .colonne {
 
-    flex: 1 1 100%;
+    flex: 0 0 min(46vw, 340px);
 
     min-width: 0;
 
@@ -1323,7 +1327,7 @@ button:hover {
 
   .dashboard-haut .colonne {
 
-    flex-basis: calc(50% - 12px);
+    flex-basis: calc(50% - 6px);
 
   }
 
