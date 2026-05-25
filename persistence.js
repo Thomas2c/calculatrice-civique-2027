@@ -287,11 +287,6 @@ function initialiserSauvegarde() {
       "charger-configuration"
     );
 
-  const boutonSauvegarderLocal =
-    document.getElementById(
-      "sauvegarder-local"
-    );
-
   const boutonPartager =
     document.getElementById(
       "partager-previsions"
@@ -324,13 +319,6 @@ function initialiserSauvegarde() {
 
   }
 
-  if (boutonSauvegarderLocal) {
-
-    boutonSauvegarderLocal.onclick =
-      sauvegarderConfigurationLocale;
-
-  }
-
   if (boutonPartager) {
 
     boutonPartager.onclick =
@@ -346,61 +334,6 @@ function initialiserSauvegarde() {
   }
 
   importerConfigurationDepuisUrl();
-
-}
-
-function sauvegarderConfigurationLocale() {
-
-  localStorage.setItem(
-    "simulateur-politique-2027-configuration",
-    JSON.stringify(
-      construireConfiguration({
-        inclurePreferences:
-          true
-      })
-    )
-  );
-
-  afficherMessageSauvegarde(
-    "Configuration enregistrée dans ce navigateur."
-  );
-
-}
-
-function chargerConfigurationLocale() {
-
-  const contenu =
-    localStorage.getItem(
-      "simulateur-politique-2027-configuration"
-    );
-
-  if (!contenu) {
-
-    afficherMessageSauvegarde(
-      "Aucune configuration locale enregistrée dans ce navigateur."
-    );
-
-    return;
-
-  }
-
-  try {
-
-    appliquerConfiguration(
-      JSON.parse(contenu)
-    );
-
-    afficherMessageSauvegarde(
-      "Configuration locale chargée."
-    );
-
-  } catch (erreur) {
-
-    afficherMessageSauvegarde(
-      "Impossible de charger la configuration locale."
-    );
-
-  }
 
 }
 
