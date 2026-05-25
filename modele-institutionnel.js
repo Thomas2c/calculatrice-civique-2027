@@ -18,16 +18,29 @@ function allianceExiste(
   autreId
 ) {
 
+  const cle =
+    candidatId
+    + "-"
+    + autreId;
+
+  if (
+    Object.prototype.hasOwnProperty.call(
+      alliancesDynamiques,
+      cle
+    )
+  ) {
+
+    return Boolean(
+      alliancesDynamiques[
+        cle
+      ]
+    );
+
+  }
+
   return Boolean(
     coalitions[
-      candidatId
-      + "-"
-      + autreId
-    ]
-    || alliancesDynamiques[
-      candidatId
-      + "-"
-      + autreId
+      cle
     ]
   );
 

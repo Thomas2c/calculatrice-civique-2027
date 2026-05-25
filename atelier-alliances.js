@@ -73,7 +73,7 @@ function afficherAtelierAlliances() {
         ).join("")}
       </div>
 
-      ${Object.keys(alliancesDynamiques).some(cle => alliancesDynamiques[cle])
+      ${Object.keys(alliancesDynamiques).length > 0
         ? `
           <button
             type="button"
@@ -286,18 +286,24 @@ function construireCapsuleCandidatPivot(
 ) {
 
   const dynamique =
+    Object.prototype.hasOwnProperty.call(
+      alliancesDynamiques,
+      pivot.id + "-" + candidat.id
+    );
+
+  const ajoute =
     Boolean(
       alliancesDynamiques[
         pivot.id + "-" + candidat.id
       ]
     );
 
-  const peutRetirer =
-    type === "allie"
-    && dynamique;
+  const retire =
+    dynamique
+    && !ajoute;
 
   const action =
-    peutRetirer
+    type === "allie"
       ? "Retirer de la coalition testée"
       : "Ajouter à la coalition de "
         + pivot.nom;
@@ -308,7 +314,8 @@ function construireCapsuleCandidatPivot(
       class="
         capsule-candidat
         capsule-${type}
-        ${dynamique ? "capsule-dynamique" : ""}
+        ${ajoute ? "capsule-dynamique" : ""}
+        ${retire ? "capsule-retrait" : ""}
       "
       title="${action}"
       onclick="basculerCandidatDansCoalition(${pivot.id}, ${candidat.id})"
@@ -333,15 +340,17 @@ function basculerCandidatDansCoalition(
   const cleBA =
     candidatId + "-" + pivotId;
 
-  const dejaDynamique =
-    Boolean(
-      alliancesDynamiques[cleAB]
-      && alliancesDynamiques[cleBA]
+  const actuellementAllie =
+    allianceExiste(
+      pivotId,
+      candidatId
     );
 
-  if (dejaDynamique) {
-    delete alliancesDynamiques[cleAB];
-    delete alliancesDynamiques[cleBA];
+  if (actuellementAllie) {
+    alliancesDynamiques[cleAB] =
+      false;
+    alliancesDynamiques[cleBA] =
+      false;
   } else {
     alliancesDynamiques[cleAB] =
       true;
@@ -356,7 +365,7 @@ function basculerCandidatDansCoalition(
     construireEffetAtelier(
       pivotId,
       candidatId,
-      dejaDynamique ? "retrait" : "ajout",
+      actuellementAllie ? "retrait" : "ajout",
       avant,
       apres
     );

@@ -2021,6 +2021,17 @@ button:hover {
 
 }
 
+.capsule-retrait {
+
+  opacity: 0.82;
+
+  text-decoration: line-through;
+
+  box-shadow:
+    0 0 0 2px rgba(239,125,125,0.16);
+
+}
+
 .capsule-vide {
 
   color: #777;

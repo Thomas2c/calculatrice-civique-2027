@@ -646,7 +646,7 @@ function compacterConfigurationPourLien(
     co: objetVraiVersListe(
       configuration.coalitions
     ),
-    ad: objetVraiVersListe(
+    ad: objetBooleenVersListeCompacte(
       configuration.alliancesDynamiques
     ),
     oi: objetVraiVersListe(
@@ -718,7 +718,7 @@ function decompacterConfigurationDepuisLien(
           configuration.co
         ),
       alliancesDynamiques:
-        listeVersObjetVrai(
+        listeCompacteVersObjetBooleen(
           configuration.ad
         ),
       optionsInstitutionnelles:
@@ -828,6 +828,50 @@ function listeVersObjetVrai(
   (liste || []).forEach(cle => {
 
     objet[cle] =
+      true;
+
+  });
+
+  return objet;
+
+}
+
+function objetBooleenVersListeCompacte(
+  objet
+) {
+
+  return Object.keys(
+    objet || {}
+  ).map(cle =>
+    objet[cle] === false
+      ? "!" + cle
+      : cle
+  );
+
+}
+
+function listeCompacteVersObjetBooleen(
+  liste
+) {
+
+  const objet = {};
+
+  (liste || []).forEach(element => {
+
+    if (
+      typeof element === "string"
+      && element.startsWith("!")
+    ) {
+
+      objet[
+        element.slice(1)
+      ] = false;
+
+      return;
+
+    }
+
+    objet[element] =
       true;
 
   });
