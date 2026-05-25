@@ -671,6 +671,318 @@ function analyserScenarioInstitutionnel(
 
 }
 
+function rechercherPivotAcceptablePresqueStable(
+  president,
+  candidatsAnalyses,
+  indicateurs
+) {
+
+  if (
+    !refus.includes(
+      president.id
+    )
+  ) {
+    return null;
+  }
+
+  const analyse =
+    analyserScenarioInstitutionnel(
+      president,
+      candidatsAnalyses,
+      indicateurs
+    );
+
+  if (
+    analyse.stable
+  ) {
+    return null;
+  }
+
+  const donneesPresident =
+    indicateurs[
+      president.id
+    ];
+
+  const presidentIsole =
+    !presidentDeclareCapableDeGouverner(
+      president
+    )
+    && (
+      donneesPresident.nombreAllies <= 3
+      || donneesPresident.scorePivot < 0
+      || donneesPresident.hostiliteAgregee
+        > donneesPresident.poidsTotalAllies
+    );
+
+  if (
+    !presidentIsole
+  ) {
+    return null;
+  }
+
+  const espaceNonAlliePresident =
+    candidatsAnalyses.filter(
+      candidat =>
+        candidat.id !== president.id
+        && !allianceExiste(
+          president.id,
+          candidat.id
+        )
+    );
+
+  const pivotsPossibles =
+    espaceNonAlliePresident
+      .filter(
+        candidat =>
+          acceptables.includes(
+            candidat.id
+          )
+      )
+      .map(candidat =>
+        construireDiagnosticPivotPresqueStable(
+          president,
+          candidat,
+          espaceNonAlliePresident,
+          indicateurs
+        )
+      )
+      .filter(Boolean)
+      .sort(
+        (a, b) =>
+          b.scoreProximite
+          - a.scoreProximite
+      );
+
+  return pivotsPossibles[0] || null;
+
+}
+
+function construireDiagnosticPivotPresqueStable(
+  president,
+  pivot,
+  espaceNonAlliePresident,
+  indicateurs
+) {
+
+  const donneesPivot =
+    indicateurs[
+      pivot.id
+    ];
+
+  if (
+    !donneesPivot
+    || donneesPivot.nombreAllies === 0
+  ) {
+    return null;
+  }
+
+  const poidsTotalEspace =
+    espaceNonAlliePresident.reduce(
+      (total, candidat) =>
+        total
+        + obtenirPoidsInfluence(
+          candidat.id
+        ),
+      0
+    );
+
+  const alliesDansEspace =
+    espaceNonAlliePresident.filter(
+      candidat =>
+        candidat.id !== pivot.id
+        && allianceExiste(
+          pivot.id,
+          candidat.id
+        )
+    );
+
+  const poidsActuel =
+    alliesDansEspace.reduce(
+      (total, candidat) =>
+        total
+        + obtenirPoidsInfluence(
+          candidat.id
+        ),
+      0
+    );
+
+  const poidsCible =
+    poidsTotalEspace
+    * tauxContinuiteCensure;
+
+  const poidsManquant =
+    Math.max(
+      0,
+      poidsCible - poidsActuel
+    );
+
+  const pourcentageManquant =
+    poidsCible === 0
+      ? 0
+      : Math.round(
+        (poidsManquant / poidsCible)
+        * 100
+      );
+
+  const tauxContinuite =
+    calculerTauxContinuiteDansGroupe(
+      pivot,
+      "alliances",
+      espaceNonAlliePresident
+    );
+
+  const acteursDisponibles =
+    identifierActeursDisponiblesPourPivot(
+      president,
+      pivot,
+      espaceNonAlliePresident,
+      alliesDansEspace
+    );
+
+  const procheDuSeuil =
+    pourcentageManquant <= 55
+    || tauxContinuite >= 0.45
+    || donneesPivot.continuiteSoutiens >= 12;
+
+  if (
+    !procheDuSeuil
+    || acteursDisponibles.length === 0
+  ) {
+    return null;
+  }
+
+  return {
+    president,
+    pivot:
+      donneesPivot,
+    poidsActuel,
+    poidsCible,
+    poidsManquant,
+    pourcentageManquant,
+    tauxContinuite,
+    densiteMutuelle:
+      donneesPivot.densiteMutuelle,
+    continuiteSoutiens:
+      donneesPivot.continuiteSoutiens,
+    acteursDisponibles,
+    scoreProximite:
+      donneesPivot.scorePivot
+      + (tauxContinuite * 20)
+      - pourcentageManquant
+  };
+
+}
+
+function identifierActeursDisponiblesPourPivot(
+  president,
+  pivot,
+  espaceNonAlliePresident,
+  alliesDansEspace
+) {
+
+  return espaceNonAlliePresident
+    .filter(
+      candidat =>
+        candidat.id !== pivot.id
+        && !allianceExiste(
+          pivot.id,
+          candidat.id
+        )
+        && !allianceExiste(
+          president.id,
+          candidat.id
+        )
+    )
+    .map(candidat => {
+
+      const distanceAlliance =
+        calculerDistancesCompatibiliteDansGroupe(
+          pivot.id,
+          "alliances",
+          espaceNonAlliePresident.map(
+            membre =>
+              membre.id
+          )
+        )[
+          candidat.id
+        ];
+
+      const distancePorosite =
+        calculerDistancesCompatibiliteDansGroupe(
+          pivot.id,
+          "oppositions",
+          espaceNonAlliePresident.map(
+            membre =>
+              membre.id
+          )
+        )[
+          candidat.id
+        ];
+
+      const liensAvecAllies =
+        alliesDansEspace.filter(
+          allie =>
+            lienCompatibleExiste(
+              candidat.id,
+              allie.id,
+              "alliances"
+            )
+            || lienCompatibleExiste(
+              candidat.id,
+              allie.id,
+              "oppositions"
+            )
+        ).length;
+
+      const scoreRenfort =
+        obtenirPoidsInfluence(
+          candidat.id
+        )
+        + liensAvecAllies
+        + (
+          distanceAlliance
+            ? 4 / distanceAlliance
+            : 0
+        )
+        + (
+          distancePorosite
+            ? 2 / distancePorosite
+            : 0
+        );
+
+      return {
+        candidat,
+        poids:
+          obtenirPoidsInfluence(
+            candidat.id
+          ),
+        distanceAlliance:
+          distanceAlliance || null,
+        distancePorosite:
+          distancePorosite || null,
+        liensAvecAllies,
+        scoreRenfort
+      };
+
+    })
+    .filter(
+      acteur =>
+        acteur.scoreRenfort > acteur.poids
+        || acteur.distanceAlliance !== null
+        || acteur.distancePorosite !== null
+    )
+    .sort(
+      (a, b) =>
+        b.scoreRenfort
+        - a.scoreRenfort
+    )
+    .slice(
+      0,
+      5
+    );
+
+}
+
 function calculerDistancesCompatibiliteDansGroupe(
   candidatId,
   typeGraphe,

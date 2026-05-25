@@ -82,7 +82,7 @@ function construireTableauInstitutionnel(
         margin-bottom:15px;
       ">
 
-        Scores des présidentiables plausibles
+        5.1 Scores des présidentiables plausibles
 
       </div>
 
@@ -104,25 +104,21 @@ function construireTableauInstitutionnel(
 
     </div>
 
-    <table style="
-      width:100%;
-      border-collapse:collapse;
-      font-size:13px;
-    ">
+    <table class="tableau-scores">
 
       <tr>
         <th align="left">Candidat</th>
-        <th>Influence</th>
-        <th>Duels</th>
-        <th>Potentiel</th>
-        <th>Capacité présidentielle</th>
-        <th>Alliés</th>
-        <th>Poids alliés</th>
-        <th>Réciproques</th>
-        <th>Densité</th>
-        <th>Continuité</th>
-        <th>Hostilité</th>
-        <th>Score pivot</th>
+        <th>${construireEnteteAide("Influence", "Influence politique estimée : faible signifie peu de relais politiques ; moyenne, une capacité de négociation réelle ; forte, une capacité à structurer une coalition au-delà de son camp.")}</th>
+        <th>${construireEnteteAide("Duels", "Nombre de duels présidentiels que ce candidat semble capable de gagner selon vos hypothèses.")}</th>
+        <th>${construireEnteteAide("Potentiel", "Probabilité estimée d’accéder au second tour selon vos hypothèses.")}</th>
+        <th>${construireEnteteAide("Capacité présidentielle", "Mesure la capacité à gagner, atteindre l’Élysée et dominer les scénarios de second tour. Elle ne mesure pas encore la capacité à gouverner durablement.")}</th>
+        <th>${construireEnteteAide("Alliés", "Nombre de candidats avec lesquels ce candidat pourrait potentiellement gouverner.")}</th>
+        <th>${construireEnteteAide("Poids alliés", "Poids politique cumulé des alliés potentiels. Tous les alliés ne disposent pas de la même influence politique.")}</th>
+        <th>${construireEnteteAide("Réciproques", "Nombre d’alliances mutuelles : A accepte B et B accepte A. Ces alliances sont généralement plus stables politiquement.")}</th>
+        <th>${construireEnteteAide("Densité alliés", "Mesure les liens entre les alliés eux-mêmes. Si A, B et C sont tous reliés entre eux, la densité est forte.")}</th>
+        <th>${construireEnteteAide("Continuité indirecte", "Mesure les compatibilités indirectes dans le réseau politique. Des chaînes d’alliances peuvent rendre une coalition, une censure ou une coordination plus plausible.")}</th>
+        <th>${construireEnteteAide("Hostilité", "Mesure la capacité des oppositions à se coordonner contre ce candidat. Une forte hostilité augmente le risque de censure, de blocage ou de cohabitation.")}</th>
+        <th>${construireEnteteAide("Score pivot", "Mesure la capacité globale à devenir un centre de coalition, un pivot gouvernemental ou un Premier ministre plausible. Il combine alliances, poids politique, réciprocité, continuité et hostilité.")}</th>
       </tr>
 
   `;
@@ -190,6 +186,29 @@ function construireTableauInstitutionnel(
 
 }
 
+function construireEnteteAide(
+  libelle,
+  aide
+) {
+
+  return `
+    <span class="entete-aide">
+      <span>${libelle}</span>
+      <button
+        type="button"
+        class="icone-aide"
+        aria-label="${aide}"
+      >
+        ?
+      </button>
+      <span class="tooltip-aide" role="tooltip">
+        ${aide}
+      </span>
+    </span>
+  `;
+
+}
+
 function calculerScoresVictoire(
   candidatsVisibles
 ) {
@@ -246,7 +265,7 @@ function afficherLectureInstitutionnelle(
     `
 
     <h2>
-      10. Au premier tour, soutenir un acceptable capable de gouverner
+      5.3 Pour qui voter au premier tour selon ces scores et vos préférences
     </h2>
 
     <p>
@@ -255,6 +274,15 @@ function afficherLectureInstitutionnelle(
       favorable, il peut être rationnel de soutenir
       au premier tour celui qui peut devenir le pivot
       gouvernemental le plus stable.
+    </p>
+
+    <p>
+      Un scénario peut donc être favorable même si votre candidat
+      acceptable n’est pas élu président : il peut malgré tout
+      devenir le pivot gouvernemental autour duquel une coalition
+      stable se construit. Dans ces cas, voter pour lui au premier
+      tour peut renforcer sa capacité de négociation et son rôle
+      futur dans le gouvernement.
     </p>
 
     <p>
@@ -353,18 +381,248 @@ function construireCarteGouvernementStable(
 
   }
 
+  const scenariosTresFavorables =
+    scenarios.filter(
+      scenario =>
+        !refus.includes(
+          scenario.president.id
+        )
+    );
+
+  const autresScenariosFavorables =
+    scenarios.filter(
+      scenario =>
+        refus.includes(
+          scenario.president.id
+        )
+        && acceptables.includes(
+          scenario.pivot.candidat.id
+        )
+    );
+
+  const scenariosProchesPivotAcceptable =
+    candidatsPresidentiables
+      .map(president =>
+        rechercherPivotAcceptablePresqueStable(
+          president,
+          candidats,
+          indicateurs
+        )
+      )
+      .filter(Boolean);
+
   return `
     <div class="carte-stabilite">
       <h3>
-        Scénarios favorables à vos acceptables
+        Scénarios très favorables à vos acceptables
       </h3>
 
       <p>
-        Les scénarios sont classés du gouvernement acceptable
-        le plus stable au moins stable.
-        Le président élu peut être différent du pivot gouvernemental.
-        Les configurations avec opposition bloquante
-        ne sont pas affichées comme solutions favorables.
+        Ces scénarios correspondent aux cas où le président élu
+        n’est pas dans vos refus, et où un candidat acceptable
+        peut former le pivot gouvernemental stable.
+      </p>
+
+      ${construireListeScenariosStables(
+        scenariosTresFavorables
+      )}
+
+      ${construireAutresScenariosFavorables(
+        autresScenariosFavorables
+      )}
+
+      ${construireScenariosProchesPivotAcceptable(
+        scenariosProchesPivotAcceptable
+      )}
+    </div>
+  `;
+
+}
+
+function construireScenariosProchesPivotAcceptable(
+  scenarios
+) {
+
+  if (
+    scenarios.length === 0
+  ) {
+    return "";
+  }
+
+  return `
+    <div class="scenarios-presque-stables">
+      <h3>
+        Gouvernements instables proches d’un pivot acceptable
+      </h3>
+
+      <p>
+        Ces scénarios ne sont pas classés comme coalitions stables.
+        Ils signalent seulement des configurations où un président
+        élu refusé paraît isolé, tandis qu’un pivot acceptable
+        semble proche de pouvoir agréger une coalition alternative.
+      </p>
+
+      <div class="cartes-stabilite">
+        ${scenarios.map(scenario =>
+          construireCarteScenarioPresqueStable(
+            scenario
+          )
+        ).join("")}
+      </div>
+    </div>
+  `;
+
+}
+
+function construireCarteScenarioPresqueStable(
+  scenario
+) {
+
+  return `
+    <article class="scenario-presque-stable">
+      <div class="candidat-stabilite-entete">
+        <strong>
+          ${scenario.pivot.candidat.nom}
+        </strong>
+        <span>
+          Pivot acceptable potentiel
+        </span>
+      </div>
+
+      <div class="scenario-ligne">
+        Président élu :
+        <strong>
+          ${scenario.president.nom}
+        </strong>
+        <span class="badge-refus">refusé</span>
+      </div>
+
+      <div class="lecture-stabilite">
+        Selon vos hypothèses, le président élu semble disposer
+        d’un gouvernement fragile et politiquement isolé.
+        Cependant, un pivot gouvernemental alternatif semble
+        proche de pouvoir émerger.
+      </div>
+
+      <p>
+        Ce candidat acceptable pourrait devenir un pivot
+        gouvernemental crédible si certaines alliances
+        supplémentaires émergeaient dans cet espace parlementaire.
+      </p>
+
+      <div class="barre-comparaison">
+        <div class="barre-libelle">
+          <span>Poids estimé manquant</span>
+          <span>${scenario.pourcentageManquant}%</span>
+        </div>
+        <div class="barre-fond">
+          <div
+            class="barre-remplissage barre-attention"
+            style="width:${Math.min(100, scenario.pourcentageManquant)}%"
+          ></div>
+        </div>
+        <div class="barre-detail">
+          poids actuel ${scenario.poidsActuel.toFixed(1)}
+          · seuil estimé ${scenario.poidsCible.toFixed(1)}
+          · densité ${Math.round(scenario.densiteMutuelle * 100)}%
+          · continuité ${scenario.continuiteSoutiens.toFixed(1)}
+          · continuité du bloc ${Math.round(scenario.tauxContinuite * 100)}%
+        </div>
+      </div>
+
+      <p>
+        Certains candidats non alliés au président élu pourraient
+        encore renforcer cette coalition, améliorer la continuité
+        des alliances ou stabiliser une majorité alternative.
+      </p>
+
+      <div class="acteurs-disponibles">
+        <strong>
+          Acteurs encore disponibles susceptibles de renforcer
+          ce pivot gouvernemental :
+        </strong>
+        <ul>
+          ${scenario.acteursDisponibles.map(acteur =>
+            `
+            <li>
+              ${acteur.candidat.nom}
+              <span>
+                poids ${acteur.poids}
+                · liens ${acteur.liensAvecAllies}
+              </span>
+            </li>
+            `
+          ).join("")}
+        </ul>
+      </div>
+
+      <p class="retour-alliance">
+        Vous pouvez retourner dans la section “Alliances gouvernementales”
+        pour explorer quelles alliances supplémentaires pourraient
+        renforcer cette coalition et modifier sa stabilité parlementaire.
+      </p>
+    </article>
+  `;
+
+}
+
+function construireListeScenariosStables(
+  scenarios
+) {
+
+  if (
+    scenarios.length === 0
+  ) {
+
+    return `
+      <p>
+        Aucun scénario très favorable ne se dégage pour le moment.
+      </p>
+    `;
+
+  }
+
+  return `
+    <div class="cartes-stabilite">
+      ${scenarios.map((scenario, index) =>
+        construireCarteScenarioStable(
+          scenario,
+          index
+        )
+      ).join("")}
+    </div>
+  `;
+
+}
+
+function construireAutresScenariosFavorables(
+  scenarios
+) {
+
+  if (
+    scenarios.length === 0
+  ) {
+    return "";
+  }
+
+  return `
+    <div class="autres-scenarios-favorables">
+      <h3>
+        Autres scénarios favorables
+      </h3>
+
+      <p>
+        Dans ces scénarios, le président élu fait partie
+        de vos refus. Mais vos hypothèses indiquent malgré tout
+        qu’un candidat acceptable pourrait devenir le pivot
+        d’une coalition gouvernementale stable.
+      </p>
+
+      <p>
+        Ces cas peuvent donc rester favorables du point de vue
+        gouvernemental : voter au premier tour pour ce candidat
+        acceptable peut renforcer sa capacité à devenir le centre
+        de gravité du gouvernement, même sans être élu président.
       </p>
 
       <div class="cartes-stabilite">

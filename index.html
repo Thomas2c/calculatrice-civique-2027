@@ -13,73 +13,54 @@
 
 <body>
 
- <h1>
+<header class="intro-parcours">
 
-  Simulateur politique 2027
+  <p class="sur-titre">
+    Simulateur politique 2027
+  </p>
 
-</h1>
+  <h1>
+    Explorer les situations politiques possibles
+    après la présidentielle
+  </h1>
 
-<p class="sous-titre">
-
-  Et si on se posait calmement
-  la question des conséquences institutionnelles ?
-
-</p>
-<div class="manifeste">
-
-  Une élection ne sert pas seulement
-  à choisir un président.
-
-  Elle sert aussi
-  à produire un pouvoir capable
-  de gouverner durablement. Avec le parlement en particulier. 
-
-</div>
- <div class="infos">
-
-  <div class="info-box">
-
-    <h2>
-      Pourquoi ?
-    </h2>
+  <div class="intro-texte">
 
     <p>
+      Cette simulation explore les situations politiques possibles
+      après la présidentielle de 2027.
+    </p>
 
-      Cette simulation explore les conséquences institutionnelles possibles de l’élection présidentielle de 2027 en tenant compte du paysage politique. 
-      Elle permet de tester différents scénarios de second tour puis d’observer les coalitions, les cohabitations et les pivots gouvernementaux plausibles.
-  <br><br>
- Suivez les étapes : 
-      <br>- préqualification de candidats susceptibles d'aller au second tour (déjà rempli mais modifiable), 
-      <br>- vos préférences parmi les candidats, ceux que vous refusez dans tous les cas, ceux que vous acceptez dans certaines configurations, 
-      <br>- vos prévisions de duels pour le second tour
-      <br>- vos estimations sur la capacité à gouverner, avec le parlement et avec des ministres 
-      <br>- les chances qu'ils ont selon vous d'arriver au second tour
-<br>
-          Au final : une lecture institutionnelle neutre des configurations produites par vos hypothèses.<br>
+    <p>
+      Votre vote ne choisit pas seulement un président :
+      il contribue aussi à produire un Parlement,
+      un gouvernement et des coalitions possibles.
+    </p>
+
+    <p>
+      Au fil des étapes, vous allez explorer les candidats crédibles,
+      les oppositions, les alliances et les situations institutionnelles
+      qui pourraient émerger.
     </p>
 
   </div>
 
-  <div class="info-box">
-
-    <h2>
-      Fonctionnement technique   </h2>
-
-    <p>
-
-      Techniquement : Aucun compte. Aucun cookie. Aucune donnée personnelle. Tous les calculs sont effectués localement dans votre navigateur.
-
-    </p>
-
+  <div class="appel-depart">
+    Commencez par choisir les candidats qui vous semblent
+    capables d’accéder au second tour.
   </div>
 
-</div>
+  <p class="confidentialite">
+    Aucun compte. Aucun cookie. Les calculs restent dans votre navigateur.
+  </p>
 
-<div class="sauvegarde">
+</header>
 
-  <h2>
+<details class="sauvegarde">
+
+  <summary>
     Sauvegarder ou charger une configuration
-  </h2>
+  </summary>
 
   <p>
     Vous pouvez enregistrer vos choix sur votre ordinateur,
@@ -107,21 +88,38 @@
 
   <div id="message-sauvegarde"></div>
 
-</div>
+</details>
 
-<div class="preselection">
+<nav class="progression-ux" aria-label="Progression du simulateur">
+
+  <span data-ux-indicator="1">1. Candidats</span>
+  <span data-ux-indicator="2">1 bis. Influence</span>
+  <span data-ux-indicator="3">2. Préférences</span>
+  <span data-ux-indicator="4">3. Duels</span>
+  <span data-ux-indicator="5">4. Alliances</span>
+  <span data-ux-indicator="6">5. Résultats</span>
+
+</nav>
+
+<div class="preselection etape-ux" data-ux-step="1">
 
   <h2>
     1. Présidentiables plausibles
   </h2>
 
-  <p>
+  <div class="message-etape">
 
-    Cette simulation explore les scénarios plausibles du second tour.
+    <p>
+      Quels candidats vous semblent réellement capables
+      d’accéder au second tour ?
+    </p>
 
-    On va partir de 6 candidats capables selon vous d’atteindre le second tour. Voici une liste pré-remplie, mais que vous pouvez modifier. 
+    <p>
+      Cette étape sert à définir les principaux acteurs plausibles
+      de l’élection présidentielle.
+    </p>
 
-  </p>
+  </div>
 <div id="prequalification-info"
      style="
        background:#f4f4f4;
@@ -160,35 +158,48 @@
 
   </div>
 
+  <div class="validation-etape" id="validation-etape-1"></div>
+
 
 </div>
-<div class="influences-full">
+<div class="influences-full etape-ux" data-ux-step="2">
 
   <h2>
-    2. Influence politique réelle
+    1 bis. Influence politique réelle
   </h2>
 
-  <p>
+  <div class="message-etape">
 
-    Classez les 25 personnalités selon leur capacité réelle
-    à peser dans la production du pouvoir après l’élection.
-    Ce classement ne mesure pas seulement la popularité électorale :
-    il tient compte des députés, des relais parlementaires,
-    de l’appareil politique, de l’influence médiatique,
-    de la capacité d’agrégation et de la capacité à devenir
-    un pivot de coalition.
+    <p>
+      Tous les candidats ne disposent pas
+      de la même influence politique réelle.
+    </p>
 
-  </p>
+    <p>
+      Cette étape sert à estimer leur poids parlementaire,
+      leur capacité d’agrégation et leur capacité à participer
+      à une coalition gouvernementale.
+    </p>
+
+    <ul class="criteres-compacts">
+      <li><strong>Faible :</strong> peu d’élus ou peu de relais politiques</li>
+      <li><strong>Moyenne :</strong> présence parlementaire réelle mais limitée</li>
+      <li><strong>Forte :</strong> capacité à structurer une coalition au-delà de son camp</li>
+    </ul>
+
+  </div>
 
   <div id="influences-candidats">
 
   </div>
 
+  <div class="validation-etape" id="validation-etape-2"></div>
+
 </div>
-<div class="potentiel-full">
+<div class="potentiel-full etape-ux" data-ux-step="3">
 
   <h2>
-    3. Potentiel d’accès au second tour
+    2. Rapport de force du premier tour
   </h2>
 
 <p>
@@ -216,14 +227,14 @@
   </div>
 
 </div>
-<div class="dashboard-haut">
+<div class="dashboard-haut etape-ux" data-ux-step="3">
 
   <!-- REFUS -->
 
   <div class="colonne">
 
     <h2>
-      4. Refus absolus : mes préférences
+      2 bis. Refus absolus
     </h2>
 
     <p>
@@ -241,7 +252,7 @@
   <div class="colonne">
 
     <h2>
-      5. Acceptables : mes préférences 
+      2 ter. Acceptables
     </h2>
 
     <p>
@@ -255,20 +266,31 @@
 
   </div>
 
+  <div class="validation-etape validation-large" id="validation-etape-3"></div>
+
 </div>
 
 <!-- DUELS -->
 
-<div class="duels-full">
+<div class="duels-full etape-ux" data-ux-step="4">
 
   <h2>
-    6. Duels : mes prédictions
+    3. Duels présidentiels
   </h2>
 
-  <p>
-    Quel candidat gagnerait
-    ces duels selon vous ?
-  </p>
+  <div class="message-etape">
+
+    <p>
+      Selon vous, qui gagnerait chaque duel de second tour ?
+    </p>
+
+    <p>
+      Cette étape sert à mesurer la capacité présidentielle,
+      les dynamiques de second tour et les candidats capables
+      d’accéder réellement au pouvoir.
+    </p>
+
+  </div>
 
   <p class="explication-duels">
 
@@ -281,25 +303,41 @@
 
   <div id="scenarios"></div>
 
+  <div class="validation-etape" id="validation-etape-4"></div>
+
 </div>
 
-  <div class="dashboard-bas">
+  <div class="dashboard-bas etape-ux" data-ux-step="5">
 
     <div class="colonne">
 
   <h2>
-    7. Capacité à gouverner : mes prédictions
+    4. Alliances gouvernementales
   </h2>
 
-  <p>
-    Avec quelles personnalités
-    ce candidat pourrait-il
-    gouverner durablement ? <br> 
-    Qui pourrait être, ou devenir à nouveau, 
-    un des ses ministres ?
-  </p>
+  <div class="message-etape">
+
+    <p>
+      Quels candidats pourraient gouverner ensemble ?
+    </p>
+
+    <p>
+      Cette étape sert à détecter les coalitions possibles,
+      les pivots gouvernementaux, les cohabitations plausibles
+      et les oppositions capables de coordonner une motion de censure.
+    </p>
+
+    <p>
+      Une alliance ne signifie pas forcément partager le même programme.
+      Le simulateur mesure aussi les compatibilités tactiques
+      et les coordinations possibles de proche en proche.
+    </p>
+
+  </div>
 
   <div id="coalitions"></div>
+
+  <div class="validation-etape" id="validation-etape-5"></div>
 
  
 
@@ -310,70 +348,39 @@
 
 <!-- STRATEGIE -->
 
-<div class="colonne strategie strategie-full">
+<div class="colonne strategie strategie-full etape-ux" data-ux-step="6">
 
   <h2>
-    8. Les scores
+    5. Résultats
   </h2>
+
+  <div class="message-etape">
+
+    <p>
+      Vous n’avez plus d’informations à saisir.
+      Le simulateur rassemble maintenant les conséquences
+      de vos hypothèses.
+    </p>
+
+    <p>
+      Cette synthèse regroupe les scores, les conséquences
+      institutionnelles et les scénarios de premier tour
+      compatibles avec vos préférences.
+    </p>
+
+  </div>
 
   <div id="strategie"></div>
 
 </div>
 
- <div class="scenarios-politiques-full">
+ <div class="scenarios-politiques-full etape-ux" data-ux-step="6">
 
   <div id="scenarios-politiques"></div>
 
-  <div class="explication-scenarios">
-
-  <h4>
-    Comment ces scénarios sont-ils calculés ?
-  </h4>
-
-  <p>
-
-    Ces scénarios sont déduits de vos choix précédents :
-
-  </p>
-
-  <ul>
-
-    <li>
-      Les duels permettent d’évaluer
-      la capacité d’un candidat
-      à gagner l’élection présidentielle.
-    </li>
-
-    <li>
-      Les alliances gouvernementales
-      permettent d’estimer sa capacité
-      à former un gouvernement durable.
-    </li>
-
-    <li>
-      Les options institutionnelles
-      (coalition, dissolution,
-      majorité absolue)
-      servent à projeter
-      les formes possibles du pouvoir exécutif.
-    </li>
-
-    <li>
-      Si un candidat semble incapable
-      d’obtenir une majorité
-      ou une coalition stable,
-      le simulateur considère
-      qu’une cohabitation
-      ou un autre centre de gravité gouvernemental
-      devient probable.
-    </li>
-
-  </ul>
-
-</div>
 </div>
 
-<div class="conclusion">
+<div class="conclusion etape-ux" data-ux-step="6">
 
  
   <div id="vote-utile-final">
@@ -383,7 +390,7 @@
   
 </div>
 
-<section class="notice-modele" aria-labelledby="notice-modele-titre">
+<section class="notice-modele etape-ux" data-ux-step="6" aria-labelledby="notice-modele-titre">
 
   <div class="notice-entete">
 
@@ -459,7 +466,7 @@
     </article>
 
     <article>
-      <h3>8. Scores</h3>
+      <h3>5.1 Scores</h3>
       <p>
         Le système combine capacité présidentielle, alliés,
         poids politique, réciprocité, densité, continuité
@@ -468,7 +475,7 @@
     </article>
 
     <article>
-      <h3>9. Conséquences institutionnelles</h3>
+      <h3>5.2 Conséquences institutionnelles</h3>
       <p>
         Pour chaque président élu possible, le modèle cherche
         s’il peut gouverner, si une coalition alternative existe,
@@ -477,7 +484,7 @@
     </article>
 
     <article>
-      <h3>10. Choix de premier tour</h3>
+      <h3>5.3 Choix de premier tour</h3>
       <p>
         Le simulateur repère les cas où un acceptable peut devenir
         pivot gouvernemental stable.
@@ -517,6 +524,7 @@
   <script src="scenarios-politiques.js"></script>
   <script src="potentiels.js"></script>
   <script src="strategie.js"></script>
+  <script src="ux-progressif.js"></script>
   <script src="app.js"></script>
 
 </body>

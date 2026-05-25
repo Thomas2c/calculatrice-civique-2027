@@ -48,6 +48,8 @@ function mettreAJour() {
 
   }
 
+  appliquerProgressionUX();
+
 }
 
 const boutonPrequalification =
@@ -56,6 +58,8 @@ const boutonPrequalification =
   );
 
 initialiserSauvegarde();
+
+initialiserProgressionUX();
 
 let dejaClique = false;
 

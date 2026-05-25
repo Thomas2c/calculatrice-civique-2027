@@ -12,7 +12,7 @@ function afficherScenariosPolitiques() {
     container.innerHTML =
       `
       <h3>
-        9. Les conséquences institutionnelles
+        5.2 Conséquences institutionnelles
       </h3>
 
       <p>
@@ -38,18 +38,14 @@ function afficherScenariosPolitiques() {
 
   let html = `
     <h3>
-      9. Les conséquences institutionnelles
+      5.2 Conséquences institutionnelles
     </h3>
 
-    <table style="
-      width:100%;
-      border-collapse:collapse;
-      margin-top:15px;
-    ">
+    <table class="tableau-resultats">
       <tr>
         <th align="left">Si ce candidat gagne...</th>
         <th align="left">Conséquence plausible</th>
-        <th align="left">Pivot gouvernemental possible</th>
+        <th align="left">Pivot gouvernemental plausible</th>
         <th align="left">Détail du scénario</th>
       </tr>
   `;
@@ -68,6 +64,11 @@ function afficherScenariosPolitiques() {
         indicateurs[
           candidat.id
         ];
+
+      const pivot =
+        analyse.pivot
+          ? analyse.pivot.candidat
+          : null;
 
       html += `
         <tr>
@@ -90,10 +91,20 @@ function afficherScenariosPolitiques() {
             ${analyse.situation}
           </td>
 
-          <td>
+          <td
+            style="
+              ${
+                pivot && refus.includes(pivot.id)
+                ? "background:tomato;color:white;"
+                : pivot && acceptables.includes(pivot.id)
+                ? "background:lightgreen;"
+                : ""
+              }
+            "
+          >
             ${
-              analyse.pivot
-                ? analyse.pivot.candidat.nom
+              pivot
+                ? pivot.nom
                 : "Aucun pivot clair"
             }
           </td>
@@ -115,15 +126,22 @@ function afficherScenariosPolitiques() {
   html += `
     </table>
 
-    <div style="
-      margin-top:40px;
-      padding-top:20px;
-      border-top:2px solid #ccc;
-    ">
+    <aside class="notice-resultats">
 
       <h4>
-        Synthèse neutre
+        Notice
       </h4>
+
+      <p>
+        Selon vos hypothèses, voici les situations institutionnelles
+        qui pourraient émerger après l’élection présidentielle
+        puis d’éventuelles législatives.
+      </p>
+
+      <p>
+        Le système ne cherche pas à dire quelle situation est préférable.
+        Il rend visibles les conséquences plausibles des rapports de force.
+      </p>
 
       <p>
         Ces conséquences décrivent les effets
@@ -132,7 +150,35 @@ function afficherScenariosPolitiques() {
         ou mauvaises et ne recommandent aucune orientation.
       </p>
 
-    </div>
+      <h5>
+        Comment ces scénarios sont-ils calculés ?
+      </h5>
+
+      <p>
+        Ces scénarios sont déduits de vos choix précédents :
+      </p>
+
+      <ul>
+        <li>
+          Les duels évaluent la capacité d’un candidat
+          à gagner l’élection présidentielle.
+        </li>
+        <li>
+          Les alliances gouvernementales estiment sa capacité
+          à former un gouvernement durable.
+        </li>
+        <li>
+          Les options institutionnelles projettent les formes possibles
+          du pouvoir exécutif : coalition, dissolution ou majorité absolue.
+        </li>
+        <li>
+          Si aucun centre de majorité stable ne se dégage,
+          le simulateur rend visibles les risques de cohabitation,
+          de blocage ou de déplacement du centre gouvernemental.
+        </li>
+      </ul>
+
+    </aside>
   `;
 
   container.innerHTML =

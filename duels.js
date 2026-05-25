@@ -58,7 +58,6 @@ function afficherDuels() {
             pronostics[cle] =
               candidat1.id;
 
-            console.log(pronostics);
             mettreAJour();
 
           };
@@ -68,7 +67,6 @@ function afficherDuels() {
             pronostics[cle] =
               candidat2.id;
 
-            console.log(pronostics);
             mettreAJour();
 
           };
