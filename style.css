@@ -546,6 +546,10 @@ button:hover {
   box-shadow:
     0 2px 8px rgba(0,0,0,0.1);
 
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+
 }
 
 #influences-candidats {
@@ -656,11 +660,28 @@ button:hover {
 
   cursor: grab;
 
+  touch-action: none;
+
+  user-select: none;
+
 }
 
 .influence-carte:active {
 
   cursor: grabbing;
+
+}
+
+.influence-carte-mobile-drag {
+
+  position: relative;
+
+  z-index: 20;
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.22);
+
+  opacity: 0.96;
 
 }
 
@@ -1159,7 +1180,56 @@ button:hover {
 
   #influences-candidats {
 
-    grid-template-columns: 1fr;
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    min-width: 780px;
+
+    gap: 8px;
+
+  }
+
+  .influence-colonne {
+
+    min-height: 300px;
+
+    padding: 8px;
+
+  }
+
+  .influence-entete {
+
+    margin-bottom: 10px;
+
+  }
+
+  .influence-entete h3 {
+
+    margin-bottom: 6px;
+
+    font-size: 18px;
+
+    line-height: 1.1;
+
+  }
+
+  .influence-entete p {
+
+    font-size: 13px;
+
+    line-height: 1.25;
+
+  }
+
+  .influence-entete ul {
+
+    display: none;
+
+  }
+
+  .influence-liste {
+
+    gap: 7px;
 
   }
 
@@ -1193,11 +1263,12 @@ button:hover {
   #liste-acceptables button,
   #scenarios button,
   #coalitions button,
-  .relations-gouvernementales button {
+  .relations-gouvernementales button,
+  .influence-carte {
 
     min-height: 58px;
 
-    font-size: 21px;
+    font-size: 18px;
 
     line-height: 1.18;
 

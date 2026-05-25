@@ -31,6 +31,9 @@ const criteresInfluence = {
   }
 };
 
+let glissementInfluence =
+  null;
+
 function afficherInfluencesPolitiques() {
 
   const container =
@@ -257,6 +260,303 @@ function creerCarteInfluence(
     }
   );
 
+  carte.addEventListener(
+    "pointerdown",
+    event => {
+
+      demarrerGlissementInfluence(
+        event,
+        carte,
+        candidat.id
+      );
+
+    }
+  );
+
+  carte.addEventListener(
+    "click",
+    event => {
+
+      if (
+        carte.dataset.glissementEffectue ===
+        "true"
+      ) {
+
+        event.preventDefault();
+
+        carte.dataset.glissementEffectue =
+          "false";
+
+      }
+
+    }
+  );
+
   return carte;
+
+}
+
+function demarrerGlissementInfluence(
+  event,
+  carte,
+  candidatId
+) {
+
+  if (
+    event.pointerType === "mouse" &&
+    event.button !== 0
+  ) {
+    return;
+  }
+
+  glissementInfluence = {
+    carte,
+    candidatId,
+    departX: event.clientX,
+    departY: event.clientY,
+    actif: false
+  };
+
+  carte.setPointerCapture(
+    event.pointerId
+  );
+
+  carte.addEventListener(
+    "pointermove",
+    deplacerCarteInfluence
+  );
+
+  carte.addEventListener(
+    "pointerup",
+    terminerGlissementInfluence
+  );
+
+  carte.addEventListener(
+    "pointercancel",
+    annulerGlissementInfluence
+  );
+
+}
+
+function deplacerCarteInfluence(
+  event
+) {
+
+  if (!glissementInfluence) {
+    return;
+  }
+
+  const distanceX =
+    event.clientX -
+    glissementInfluence.departX;
+
+  const distanceY =
+    event.clientY -
+    glissementInfluence.departY;
+
+  const distance =
+    Math.hypot(
+      distanceX,
+      distanceY
+    );
+
+  if (
+    !glissementInfluence.actif &&
+    distance < 8
+  ) {
+    return;
+  }
+
+  event.preventDefault();
+
+  glissementInfluence.actif =
+    true;
+
+  const carte =
+    glissementInfluence.carte;
+
+  carte.classList.add(
+    "influence-carte-mobile-drag"
+  );
+
+  carte.style.transform =
+    "translate("
+    + distanceX
+    + "px, "
+    + distanceY
+    + "px)";
+
+  document
+    .querySelectorAll(
+      ".influence-colonne-survol"
+    )
+    .forEach(colonne => {
+
+      colonne.classList.remove(
+        "influence-colonne-survol"
+      );
+
+    });
+
+  const cible =
+    trouverColonneInfluenceSousPointeur(
+      event.clientX,
+      event.clientY
+    );
+
+  if (cible) {
+
+    cible.classList.add(
+      "influence-colonne-survol"
+    );
+
+  }
+
+}
+
+function terminerGlissementInfluence(
+  event
+) {
+
+  if (!glissementInfluence) {
+    return;
+  }
+
+  const {
+    carte,
+    candidatId,
+    actif
+  } = glissementInfluence;
+
+  nettoyerGlissementInfluence(
+    carte
+  );
+
+  if (!actif) {
+    glissementInfluence = null;
+    return;
+  }
+
+  event.preventDefault();
+
+  carte.dataset.glissementEffectue =
+    "true";
+
+  const cible =
+    trouverColonneInfluenceSousPointeur(
+      event.clientX,
+      event.clientY
+    );
+
+  if (
+    cible &&
+    cible.dataset.niveau
+  ) {
+
+    influencesPolitiques[
+      candidatId
+    ] = cible.dataset.niveau;
+
+    mettreAJour();
+
+  }
+
+  glissementInfluence =
+    null;
+
+}
+
+function annulerGlissementInfluence() {
+
+  if (!glissementInfluence) {
+    return;
+  }
+
+  nettoyerGlissementInfluence(
+    glissementInfluence.carte
+  );
+
+  glissementInfluence =
+    null;
+
+}
+
+function nettoyerGlissementInfluence(
+  carte
+) {
+
+  carte.classList.remove(
+    "influence-carte-mobile-drag"
+  );
+
+  carte.style.transform =
+    "";
+
+  carte.removeEventListener(
+    "pointermove",
+    deplacerCarteInfluence
+  );
+
+  carte.removeEventListener(
+    "pointerup",
+    terminerGlissementInfluence
+  );
+
+  carte.removeEventListener(
+    "pointercancel",
+    annulerGlissementInfluence
+  );
+
+  document
+    .querySelectorAll(
+      ".influence-colonne-survol"
+    )
+    .forEach(colonne => {
+
+      colonne.classList.remove(
+        "influence-colonne-survol"
+      );
+
+    });
+
+}
+
+function trouverColonneInfluenceSousPointeur(
+  x,
+  y
+) {
+
+  const carteGlissee =
+    glissementInfluence
+      ? glissementInfluence.carte
+      : null;
+
+  if (carteGlissee) {
+
+    carteGlissee.style.visibility =
+      "hidden";
+
+  }
+
+  const element =
+    document.elementFromPoint(
+      x,
+      y
+    );
+
+  if (carteGlissee) {
+
+    carteGlissee.style.visibility =
+      "";
+
+  }
+
+  if (!element) {
+    return null;
+  }
+
+  return element.closest(
+    ".influence-colonne"
+  );
 
 }
