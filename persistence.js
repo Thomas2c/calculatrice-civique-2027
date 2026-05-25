@@ -337,7 +337,7 @@ function initialiserSauvegarde() {
 
 }
 
-function partagerPrevisions() {
+async function partagerPrevisions() {
 
   const configurationPublique =
     construireConfiguration({
@@ -346,9 +346,7 @@ function partagerPrevisions() {
     });
 
   const lien =
-    window.location.href.split("?")[0]
-    + "?c="
-    + encoderConfiguration(
+    await construireLienPartage(
       configurationPublique
     );
 
@@ -384,15 +382,19 @@ function partagerPrevisions() {
 
 }
 
-function importerConfigurationDepuisUrl() {
+async function importerConfigurationDepuisUrl() {
 
   const parametres =
     new URLSearchParams(
       window.location.search
     );
 
+  const configCompressee =
+    parametres.get("s");
+
   const config =
-    parametres.get("c")
+    configCompressee
+    || parametres.get("c")
     || parametres.get("config");
 
   if (!config) {
@@ -402,10 +404,14 @@ function importerConfigurationDepuisUrl() {
   try {
 
     appliquerConfiguration(
-      decoderConfiguration(config),
+      configCompressee
+        ? await decoderConfigurationCompressee(
+          configCompressee
+        )
+        : decoderConfiguration(config),
       {
         mettreAJourApres:
-          false
+          true
       }
     );
 
@@ -420,6 +426,140 @@ function importerConfigurationDepuisUrl() {
     );
 
   }
+
+}
+
+async function construireLienPartage(
+  configuration
+) {
+
+  const base =
+    window.location.href.split("?")[0];
+
+  if (
+    typeof CompressionStream === "undefined"
+  ) {
+
+    return base
+      + "?c="
+      + encoderConfiguration(
+        configuration
+      );
+
+  }
+
+  return base
+    + "?s="
+    + await encoderConfigurationCompressee(
+      configuration
+    );
+
+}
+
+async function encoderConfigurationCompressee(
+  configuration
+) {
+
+  const texte =
+    JSON.stringify(
+      compacterConfigurationPourLien(
+        configuration
+      )
+    );
+
+  const flux =
+    new Blob([texte])
+      .stream()
+      .pipeThrough(
+        new CompressionStream("gzip")
+      );
+
+  const buffer =
+    await new Response(flux)
+      .arrayBuffer();
+
+  return bytesVersBase64Url(
+    new Uint8Array(buffer)
+  );
+
+}
+
+async function decoderConfigurationCompressee(
+  contenu
+) {
+
+  const donnees =
+    base64UrlVersBytes(
+      contenu
+    );
+
+  const flux =
+    new Blob([donnees])
+      .stream()
+      .pipeThrough(
+        new DecompressionStream("gzip")
+      );
+
+  const texte =
+    await new Response(flux)
+      .text();
+
+  return decompacterConfigurationDepuisLien(
+    JSON.parse(texte)
+  );
+
+}
+
+function bytesVersBase64Url(
+  bytes
+) {
+
+  let texteBinaire = "";
+
+  for (
+    let index = 0;
+    index < bytes.length;
+    index += 0x8000
+  ) {
+
+    texteBinaire +=
+      String.fromCharCode(
+        ...bytes.subarray(
+          index,
+          index + 0x8000
+        )
+      );
+
+  }
+
+  return btoa(texteBinaire)
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+
+}
+
+function base64UrlVersBytes(
+  contenu
+) {
+
+  const contenuBase64 =
+    contenu
+      .replace(/-/g, "+")
+      .replace(/_/g, "/")
+      .padEnd(
+        Math.ceil(contenu.length / 4) * 4,
+        "="
+      );
+
+  const texteBinaire =
+    atob(contenuBase64);
+
+  return Uint8Array.from(
+    texteBinaire,
+    caractere =>
+      caractere.charCodeAt(0)
+  );
 
 }
 
