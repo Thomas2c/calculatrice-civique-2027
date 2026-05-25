@@ -1160,19 +1160,21 @@ button:hover {
 
   .dashboard-haut {
 
-    flex-wrap: nowrap;
-
-    overflow-x: auto;
-
-    -webkit-overflow-scrolling: touch;
+    flex-wrap: wrap;
 
   }
 
   .dashboard-haut .colonne {
 
-    flex: 0 0 min(46vw, 340px);
+    flex: 0 0 calc(50% - 6px);
 
     min-width: 0;
+
+  }
+
+  .dashboard-haut .validation-large {
+
+    flex: 0 0 100%;
 
   }
 
