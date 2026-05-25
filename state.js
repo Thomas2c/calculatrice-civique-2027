@@ -11,6 +11,7 @@ const refus = [];
 const acceptables = [];
 const pronostics = {};
 const coalitions = {};
+const alliancesDynamiques = {};
 const optionsInstitutionnelles = {};
 const coalitionsOuvertes = {};
 const porositesTactiques = {};

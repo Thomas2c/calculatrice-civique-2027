@@ -1695,6 +1695,412 @@ button:hover {
 
 }
 
+.atelier-alliances {
+
+  margin-bottom: 30px;
+
+  padding-bottom: 24px;
+
+  border-bottom: 1px solid #dddddd;
+
+}
+
+.atelier-entete h2 {
+
+  margin-top: 0;
+
+}
+
+.atelier-entete p {
+
+  max-width: 980px;
+
+}
+
+.atelier-note {
+
+  color: #555;
+
+  font-size: 14px;
+
+}
+
+.diagnostic-atelier {
+
+  margin: 18px 0;
+
+  padding: 13px 14px;
+
+  border-radius: 8px;
+
+  font-weight: bold;
+
+  line-height: 1.45;
+
+}
+
+.diagnostic-neutre {
+
+  background: #f1f3f5;
+
+  border: 1px solid #d8dde2;
+
+}
+
+.diagnostic-positif {
+
+  background: #e8f7ed;
+
+  border: 1px solid #b9e3c4;
+
+  color: #1d5c32;
+
+}
+
+.diagnostic-fragile {
+
+  background: #fff8e6;
+
+  border: 1px solid #efd28e;
+
+  color: #654800;
+
+}
+
+.atelier-pivots {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(6, minmax(260px, 1fr));
+
+  gap: 14px;
+
+  margin-bottom: 16px;
+
+  overflow-x: auto;
+
+  -webkit-overflow-scrolling: touch;
+
+}
+
+.carte-pivot-atelier {
+
+  min-width: 260px;
+
+  padding: 14px;
+
+  border: 1px solid #dddddd;
+
+  border-radius: 8px;
+
+  background: #fafafa;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+
+}
+
+.carte-pivot-atelier:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.08);
+
+}
+
+.carte-pivot-atelier.etat-stable {
+
+  border-top: 6px solid #65c878;
+
+}
+
+.carte-pivot-atelier.etat-fragile {
+
+  border-top: 6px solid #e6bd44;
+
+}
+
+.carte-pivot-atelier.etat-isole {
+
+  border-top: 6px solid #ef7d7d;
+
+}
+
+.pivot-atelier-entete {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap: 10px;
+
+  align-items: center;
+
+  margin-bottom: 12px;
+
+}
+
+.pivot-atelier-entete h3 {
+
+  margin: 0;
+
+  font-size: 18px;
+
+}
+
+.position-pivot {
+
+  display: block;
+
+  margin-top: 3px;
+
+  color: #666;
+
+  font-size: 12px;
+
+}
+
+.etat-pivot {
+
+  padding: 4px 8px;
+
+  border-radius: 999px;
+
+  background: #eeeeee;
+
+  font-size: 12px;
+
+  font-weight: bold;
+
+}
+
+.score-pivot-atelier {
+
+  display: grid;
+
+  grid-template-columns:
+    1fr auto;
+
+  gap: 10px;
+
+  align-items: center;
+
+  margin-bottom: 8px;
+
+}
+
+.barre-gouvernabilite {
+
+  background: #2f80ed;
+
+  transition:
+    width 220ms ease;
+
+}
+
+.resume-pivot-atelier {
+
+  margin-bottom: 14px;
+
+  color: #555;
+
+  font-size: 13px;
+
+}
+
+.zone-coalition {
+
+  margin-top: 12px;
+
+}
+
+.zone-coalition-titre {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 7px;
+
+  color: #333;
+
+  font-size: 13px;
+
+  font-weight: bold;
+
+}
+
+.zone-coalition-titre span {
+
+  color: #777;
+
+}
+
+.capsules-coalition {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+
+}
+
+.capsule-candidat {
+
+  width: auto;
+
+  min-height: 0;
+
+  margin: 0;
+
+  padding: 6px 8px;
+
+  border: 1px solid transparent;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  line-height: 1.15;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+
+}
+
+.capsule-candidat:hover {
+
+  transform: translateY(-1px);
+
+}
+
+.capsule-allie {
+
+  background: #dff4e5;
+
+  border-color: #a7d8b5;
+
+  color: #1e5a31;
+
+}
+
+.capsule-disponible {
+
+  background: #eeeeee;
+
+  color: #333;
+
+}
+
+.capsule-opposant {
+
+  background: #ffe1e1;
+
+  border-color: #f4b7b7;
+
+  color: #6e2323;
+
+}
+
+.capsule-dynamique {
+
+  animation: entreeCoalition 260ms ease-out;
+
+  box-shadow:
+    0 0 0 2px rgba(47,128,237,0.18);
+
+}
+
+.capsule-vide {
+
+  color: #777;
+
+  font-size: 12px;
+
+}
+
+.effets-systemiques {
+
+  margin: 18px 0;
+
+  padding: 13px 14px;
+
+  border: 1px solid #b9d5ff;
+
+  border-radius: 8px;
+
+  background: #eef5ff;
+
+  line-height: 1.45;
+
+}
+
+.liste-effets-systemiques {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  margin-top: 10px;
+
+}
+
+.liste-effets-systemiques span {
+
+  padding: 5px 8px;
+
+  border-radius: 999px;
+
+  background: white;
+
+  font-size: 13px;
+
+}
+
+@keyframes entreeCoalition {
+
+  from {
+
+    opacity: 0.35;
+
+    transform:
+      translateY(8px)
+      scale(0.96);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+  }
+
+}
+
+.bouton-secondaire {
+
+  width: auto;
+
+  background: #eeeeee;
+
+}
+
 .texte-fin {
 
   color: #ddd;

@@ -20,6 +20,8 @@ function mettreAJour() {
 
     afficherScenariosPolitiques();
 
+    afficherAtelierAlliances();
+
   } else {
 
     document.getElementById(
@@ -29,6 +31,11 @@ function mettreAJour() {
 
     document.getElementById(
       "liste-acceptables"
+    ).innerHTML =
+      "";
+
+    document.getElementById(
+      "atelier-alliances"
     ).innerHTML =
       "";
 

@@ -24,6 +24,11 @@ function allianceExiste(
       + "-"
       + autreId
     ]
+    || alliancesDynamiques[
+      candidatId
+      + "-"
+      + autreId
+    ]
   );
 
 }
